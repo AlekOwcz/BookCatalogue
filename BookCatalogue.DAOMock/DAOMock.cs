@@ -1,12 +1,12 @@
-﻿using BookCatalogue_Core;
-using BookCatalogue_Interfaces;
+﻿using BookCatalogue.Core;
+using BookCatalogue.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalogue_DAOMock
+namespace BookCatalogue.DAOMock
 {
     internal class DAOMock : IDAO
     {

@@ -1,7 +1,7 @@
-﻿using BookCatalogue_Core;
-using BookCatalogue_Interfaces;
+﻿using BookCatalogue.Core;
+using BookCatalogue.Interfaces;
 
-namespace BookCatalogue_DAOMock.BO
+namespace BookCatalogue.DAOMock.BO
 {
     public class Book : IBook
     {

@@ -1,11 +1,11 @@
-﻿using BookCatalogue_Interfaces;
+﻿using BookCatalogue.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalogue_DAOMock.BO
+namespace BookCatalogue.DAOMock.BO
 {
     internal class Author : IAuthor
     {

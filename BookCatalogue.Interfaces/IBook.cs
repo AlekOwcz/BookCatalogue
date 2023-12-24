@@ -1,6 +1,6 @@
-﻿using BookCatalogue_Core;
+﻿using BookCatalogue.Core;
 
-namespace BookCatalogue_Interfaces
+namespace BookCatalogue.Interfaces
 {
     public interface IBook
     {

@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookCatalogue_Core\BookCatalogue_Core.csproj" />
-    <ProjectReference Include="..\BookCatalogue_Interfaces\BookCatalogue_Interfaces.csproj" />
+    <ProjectReference Include="..\BookCatalogue.Core\BookCatalogue.Core.csproj" />
+    <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

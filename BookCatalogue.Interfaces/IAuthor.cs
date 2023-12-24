@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalogue_Interfaces
+namespace BookCatalogue.Interfaces
 {
     public interface IAuthor
     {

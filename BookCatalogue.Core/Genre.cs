@@ -1,4 +1,4 @@
-﻿namespace BookCatalogue_Core
+﻿namespace BookCatalogue.Core
 {
     public enum Genre
     {
