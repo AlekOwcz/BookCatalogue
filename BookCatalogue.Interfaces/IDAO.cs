@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookCatalogue.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,14 @@ namespace BookCatalogue.Interfaces
         IEnumerable<IBook> GetAllBooks();
         IEnumerable<IAuthor> GetAllAuthors();
 
-        IAuthor CreateNewAuthor();
-        IBook CreateNewBook();
+        IAuthor CreateNewAuthor(string name, string surname, DateTime dateOfBirth);
+        IBook CreateNewBook(string title, int releaseYear, IAuthor author, Language language, Genre genre);
+        void DeleteAuthor(IAuthor author);
+        void DeleteBook(IBook book);
+        void AddAuthor(IAuthor author);
+        void AddBook(IBook book);
+        void UpdateAuthor(IAuthor author);
+        void UpdateBook(IBook book);
+
     }
 }

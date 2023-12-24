@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BookCatalogue.DAOMock.BO
 {
-    internal class Author : IAuthor
+    public class Author : IAuthor
     {
-        public int ID { get; set; }
+        public Guid ID { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public DateTime DateOfBirth { get; set; }

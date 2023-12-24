@@ -1,12 +1,12 @@
-﻿using BookCatalogue.Interfaces;
-using System.Reflection;
+﻿using System.Reflection;
+using BookCatalogue.Interfaces;
 
 namespace BookCatalogue.BLC
 {
     public class BLC
     {
         private static BLC? _instance = null;
-        private IDAO? dao;
+        private IDAO? _dao = null;
 
         private BLC(string libraryName)
         {
@@ -37,9 +37,9 @@ namespace BookCatalogue.BLC
                 return;
             }
 
-            dao = Activator.CreateInstance(typeToCreate, null) as IDAO;
+            _dao = Activator.CreateInstance(typeToCreate, null) as IDAO;
 
-            if (dao == null)
+            if (_dao == null)
             {
                 Console.WriteLine($"Failed to create an instance of the type {typeToCreate.Name}.");
                 return;
@@ -47,27 +47,33 @@ namespace BookCatalogue.BLC
         }
         public static BLC GetInstance(string libraryName)
         {
-            if (_instance == null) _instance = new BLC(libraryName);
-            if (_instance == null) throw new Exception($"Failed to create an instance of {libraryName}.");
+            if (_instance == null) 
+            { 
+                _instance = new BLC(libraryName);
+            }
+            if (_instance == null) 
+            {
+                throw new Exception($"Failed to create an instance of {libraryName}.");
+            }
             return _instance;
         }
 
         public IEnumerable<IAuthor> GetAuthors()
         {
-            if( dao == null ) 
+            if( _dao == null ) 
             { 
                 return new List<IAuthor>();  
             }
-            return dao.GetAllAuthors();
+            return _dao.GetAllAuthors();
         }
 
         public IEnumerable<IBook> GetBooks()
         {
-            if (dao == null)
+            if (_dao == null)
             {
                 return new List<IBook>();
             }
-            return dao.GetAllBooks();
+            return _dao.GetAllBooks();
         }
     }
 }

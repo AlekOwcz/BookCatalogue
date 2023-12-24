@@ -10,67 +10,127 @@ namespace BookCatalogue.DAOMock
 {
     internal class DAOMock : IDAO
     {
-        private List<IBook> books;
-        private List<IAuthor> authors;
+        private List<IBook> _books;
+        private List<IAuthor> _authors;
 
         public DAOMock()
         {
-            authors = new List<IAuthor>()
+            _authors = new List<IAuthor>()
             {
-                new BO.Author(){ ID = 1, Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
-                new BO.Author(){ ID = 2, Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
-                new BO.Author(){ ID = 3, Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
+                new BO.Author(){ ID = Guid.NewGuid(), Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
+                new BO.Author(){ ID = Guid.NewGuid(), Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
+                new BO.Author(){ ID = Guid.NewGuid(), Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
             };
-            books = new List<IBook>()
+            _books = new List<IBook>()
             {
                 new BO.Book()
                 { 
-                    ID = 1, 
+                    ID = Guid.NewGuid(), 
                     Title="Pan Tadeusz", 
                     ReleaseYear=1834,
-                    Author=authors[0], 
-                    Language=Language.POL,
-                    Genre=Genre.EPIC
+                    Author=_authors[0], 
+                    Language=Language.Polish,
+                    Genre=Genre.Epic
                 },
                 new BO.Book()
                 {
-                    ID = 2,
+                    ID = Guid.NewGuid(),
                     Title="Dziady, część III",
                     ReleaseYear=1832,
-                    Author=authors[0],
-                    Language=Language.POL,
-                    Genre=Genre.DRAMA
+                    Author=_authors[0],
+                    Language=Language.Polish,
+                    Genre=Genre.Drama
                 },
                 new BO.Book()
                 {
-                    ID = 3,
+                    ID = Guid.NewGuid(),
                     Title="Zbrodnia i kara",
                     ReleaseYear=1867,
-                    Author=authors[2],
-                    Language=Language.RUS,
-                    Genre=Genre.PSYCHOLOGICAL
+                    Author=_authors[2],
+                    Language=Language.Russian,
+                    Genre=Genre.Psychological
                 }
             };
         }
 
-        public IAuthor CreateNewAuthor()
+        public void AddAuthor(IAuthor author)
         {
-            return new BO.Author();
+            author.ID = Guid.NewGuid();
+            _authors.Add(author);
         }
 
-        public IBook CreateNewBook()
+        public void AddBook(IBook book)
         {
-            return new BO.Book();
+            book.ID = Guid.NewGuid();
+            _books.Add(book);
+        }
+
+        public IAuthor CreateNewAuthor(string name, string surname, DateTime dateOfBirth)
+        {
+            BO.Author author = new BO.Author();
+            author.Name = name;
+            author.Surname = surname;
+            author.DateOfBirth = dateOfBirth;
+            return author;
+        }
+
+        public IBook CreateNewBook(string title, int releaseYear, IAuthor author, Language language, Genre genre)
+        {
+            BO.Book book = new BO.Book();
+            book.Title = title;
+            book.ReleaseYear = releaseYear;
+            book.Author = author;
+            book.Language = language;
+            book.Genre = genre;
+            return book;
+        }
+
+        public void DeleteAuthor(IAuthor author)
+        {
+            _authors.Remove(author);
+        }
+
+        public void DeleteBook(IBook book)
+        {
+            _books.Remove(book);
         }
 
         public IEnumerable<IAuthor> GetAllAuthors()
         {
-            return authors;
+            return _authors;
         }
 
         public IEnumerable<IBook> GetAllBooks()
         {
-            return books;
+            return _books;
+        }
+
+        public void UpdateAuthor(IAuthor author)
+        {
+            var existingAuthor = _authors.FirstOrDefault(a => a.ID == author.ID);
+            if (existingAuthor != null)
+            {
+                existingAuthor.Name = author.Name;
+                existingAuthor.Surname = author.Surname;
+                existingAuthor.DateOfBirth = author.DateOfBirth;
+            }
+            else
+            {
+                throw new ArgumentException("Author not found in the database.");
+            }
+        }
+
+        public void UpdateBook(IBook book)
+        {
+            var existingBook = _books.FirstOrDefault(b => b.ID == book.ID);
+            if (existingBook != null)
+            {
+                existingBook.Title = book.Title;
+                existingBook.Author = book.Author;
+                existingBook.Language = book.Language;
+                existingBook.ReleaseYear = book.ReleaseYear;
+                existingBook.Genre = book.Genre;
+            }
         }
     }
 }

@@ -8,8 +8,8 @@ namespace BookCatalogue.Core
 {
     public enum Language
     {
-        POL,
-        ENG,
-        RUS
+        Polish,
+        English,
+        Russian
     }
 }

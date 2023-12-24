@@ -2,12 +2,12 @@
 {
     public enum Genre
     {
-        COMEDY,
-        DRAMA,
-        TRAGEDY,
-        HORROR,
-        FANTASY,
-        EPIC,
-        PSYCHOLOGICAL
+        Comedy,
+        Drama,
+        Tragedy,
+        Horror,
+        Fantasy,
+        Epic,
+        Psychological
     }
 }
