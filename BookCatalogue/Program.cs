@@ -1,11 +1,18 @@
-﻿namespace BookCatalogue
+﻿using BookCatalogue.Interfaces;
+
+
+namespace BookCatalogue
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            BLC.BLC blc = new BLC.BLC("BookCatalogue.DAOMock.dll");
+
+
+            string libraryName = System.Configuration.ConfigurationManager.AppSettings["DAOLibraryName"];
+
+            BLC.BLC blc = BLC.BLC.GetInstance(libraryName);
 
             foreach (var a in blc.GetAuthors()) 
             {
