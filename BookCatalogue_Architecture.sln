@@ -5,11 +5,11 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalogue", "BookCatalogue\BookCatalogue.csproj", "{719C67E9-41B7-47ED-A99B-89FA1BAD7D1E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalogue_Core", "BookCatalogue_Core\BookCatalogue_Core.csproj", "{FC65160C-32E7-402A-8BDE-38BFD9C36907}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalogue.Core", "BookCatalogue.Core\BookCatalogue.Core.csproj", "{FC65160C-32E7-402A-8BDE-38BFD9C36907}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalogue_Interfaces", "BookCatalogue_Interfaces\BookCatalogue_Interfaces.csproj", "{A4214820-F5D5-4AF4-89DC-8820113ECE7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookCatalogue.Interfaces", "BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj", "{A4214820-F5D5-4AF4-89DC-8820113ECE7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookCatalogue_DAOMock", "BookCatalogue_DAOMock\BookCatalogue_DAOMock.csproj", "{E89C6A73-8AA3-41AA-A74F-60C3F5B3506B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookCatalogue.DAOMock", "BookCatalogue.DAOMock\BookCatalogue.DAOMock.csproj", "{E89C6A73-8AA3-41AA-A74F-60C3F5B3506B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
