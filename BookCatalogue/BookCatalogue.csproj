@@ -23,7 +23,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BookCatalogue.BLC\BookCatalogue.BLC.csproj" />
     <ProjectReference Include="..\BookCatalogue.Core\BookCatalogue.Core.csproj" />
+    <ProjectReference Include="..\BookCatalogue.DAOMock\BookCatalogue.DAOMock.csproj" />
+    <ProjectReference Include="..\BookCatalogue.DAOSQL\BookCatalogue.DAOSQL.csproj" />
     <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
+    <ProjectReference Include="..\BookCatalogue.UIWeb\BookCatalogue.UIWeb.csproj" />
   </ItemGroup>
 
 </Project>

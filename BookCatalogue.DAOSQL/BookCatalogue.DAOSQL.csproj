@@ -22,4 +22,10 @@
     <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="dbconfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

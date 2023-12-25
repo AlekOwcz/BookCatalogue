@@ -62,7 +62,14 @@ namespace BookCatalogue.DAOSQL
             BO.Book book = new BO.Book();
             book.Title = title;
             book.ReleaseYear = releaseYear;
-            book.Author = author;
+            if (author is BO.Author bookEntity)
+            {
+                book.Author = bookEntity;
+            }
+            else
+            {
+                throw new InvalidCastException("Author must inherit from BookCatalogue.DAOSQL.BO.Author");
+            }
             book.Language = language;
             book.Genre = genre;
             return book;
@@ -129,7 +136,14 @@ namespace BookCatalogue.DAOSQL
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;
-                existingBook.Author = book.Author;
+                if (book is BO.Book bookEntity)
+                {
+                    book.Author = bookEntity.Author;
+                }
+                else
+                {
+                    throw new InvalidCastException("Book must inherit from BookCatalogue.DAOSQL.BO.Book");
+                }
                 existingBook.Language = book.Language;
                 existingBook.ReleaseYear = book.ReleaseYear;
                 existingBook.Genre = book.Genre;
