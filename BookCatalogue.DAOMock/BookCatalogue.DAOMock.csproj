@@ -22,4 +22,8 @@
     <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;" />
+  </Target>
+
 </Project>

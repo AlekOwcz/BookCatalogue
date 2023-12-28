@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
@@ -23,9 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="dbconfig.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="dbconfig.migration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;" />
+  </Target>
 
 </Project>

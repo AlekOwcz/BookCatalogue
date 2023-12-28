@@ -1,5 +1,5 @@
 {
   "ConnectionStrings": {
-    "Sqlite": "Data Source=library.db"
+    "Sqlite": "Data Source=..\\..\\..\\..\\BookCatalogue.DAOSQL\\library.db"
   }
 }

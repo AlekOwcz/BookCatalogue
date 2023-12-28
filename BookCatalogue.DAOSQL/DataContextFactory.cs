@@ -15,7 +15,7 @@ namespace BookCatalogue.DAOSQL
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("dbconfig.json");
+                .AddJsonFile("dbconfig.migration.json");
 
             var configuration = builder.Build();
 

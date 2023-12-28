@@ -16,8 +16,9 @@ namespace BookCatalogue.DAOSQL
 
         private static DataContext InitializeContext()
         {
+
             var builder = new ConfigurationBuilder()
-            .AddJsonFile("dbconfig.json");
+               .AddJsonFile("dbconfig.json");
 
             return new DataContext(builder.Build());
         }

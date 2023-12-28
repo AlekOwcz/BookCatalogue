@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
@@ -16,14 +17,21 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\BookCatalogue.BLC\BookCatalogue.BLC.csproj" />
     <ProjectReference Include="..\BookCatalogue.Core\BookCatalogue.Core.csproj" />
     <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="dbconfig.migration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(ConfigurationName)\net8.0\&quot;&#xD;&#xA;" />
+  </Target>
 
 </Project>
