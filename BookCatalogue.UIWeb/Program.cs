@@ -7,10 +7,15 @@ namespace BookCatalogue.UIWeb
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var configuration = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            string? libraryName = configuration.GetValue<string>("DAOLibraryName");
+            if (libraryName == null )
+            {
+                throw new Exception("LibraryName is not set in the configuration.");
+            }
+            builder.Services.AddSingleton(BLC.BLC.GetInstance(libraryName));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)dbconfig.migration.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;" />
+    <Exec Command="copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)dbconfig.migration.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\bin\$(Configuration)\net8.0\&quot;" />
   </Target>
 
 </Project>

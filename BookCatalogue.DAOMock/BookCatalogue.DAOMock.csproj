@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;" />
+    <Exec Command="copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;" />
   </Target>
 
 </Project>
