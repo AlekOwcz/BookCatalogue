@@ -5,36 +5,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BookCatalogue.BLC;
 using BookCatalogue.Core.DTO;
+using BookCatalogue.UIWeb.Data;
 using BookCatalogue.Interfaces;
 
-namespace BookCatalogue.Core.Controllers
+namespace BookCatalogue.UIWeb.Controllers
 {
-    public class AuthorsController : Controller
+    public class BooksController : Controller
     {
         private readonly BLC.BLC _context;
 
-        public AuthorsController(BLC.BLC BLC)
+        public BooksController(BLC.BLC BLC)
         {
             _context = BLC;
         }
 
-        // GET: Authors
+        // GET: Books
         public async Task<IActionResult> Index()
         {
-            var authors = await _context.GetAllAuthorsAsync();
-            var authorViewModels = authors.Select(a => new AuthorDTO
+            var books = await _context.GetAllBooksAsync();
+            var booksViewModels = books.Select(b => new BookDTO
             {
-                ID = a.ID,
-                Name = a.Name,
-                Surname = a.Surname,
-                DateOfBirth = a.DateOfBirth
+                ID = b.ID,
+                Title = b.Title,
+                ReleaseYear = b.ReleaseYear,
+                Author = ConvertToAuthorDTO(b.Author),
+                Language = b.Language,
+                Genre = b.Genre
             }).ToList();
-            return View(authorViewModels);
+            return View(booksViewModels);
         }
 
-        // GET: Authors/Details/5
+        // GET: Books/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -42,41 +44,41 @@ namespace BookCatalogue.Core.Controllers
                 return NotFound();
             }
 
-            var author = await _context.GetAuthorAsync(id.Value);
+            var book = await _context.GetBookAsync(id.Value);
 
-            if (author == null)
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(ConvertToAuthorDTO(author));
+            return View(ConvertToBookDTO(book));
         }
 
-        // GET: Authors/Create
+        // GET: Books/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Authors/Create
+        // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
+        public async Task<IActionResult> Create([Bind("ID,Title,ReleaseYear,Language,Genre")] BookDTO book)
         {
             if (ModelState.IsValid)
             {
-                author.ID = Guid.NewGuid();
-                IAuthor authorToAdd = _context.ConvertToIAuthor(author);
-                _context.AddAuthor(authorToAdd);
+                book.ID = Guid.NewGuid();
+                IBook bookToAdd = _context.ConvertToIBook(book);
+                _context.AddBook(bookToAdd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(book);
         }
 
-        // GET: Authors/Edit/5
+        // GET: Books/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -84,24 +86,24 @@ namespace BookCatalogue.Core.Controllers
                 return NotFound();
             }
 
-            var author = await _context.GetAuthorAsync(id.Value);
+            var book = await _context.GetBookAsync(id.Value);
 
-            if (author == null)
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(ConvertToAuthorDTO(author));
+            return View(ConvertToBookDTO(book));
         }
 
-        // POST: Authors/Edit/5
+        // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Title,ReleaseYear,Language,Genre")] BookDTO book)
         {
-            if (id != author.ID)
+            if (id != book.ID)
             {
                 return NotFound();
             }
@@ -110,13 +112,13 @@ namespace BookCatalogue.Core.Controllers
             {
                 try
                 {
-                    IAuthor authorToUpdate = _context.ConvertToIAuthor(author);
-                    _context.UpdateAuthor(authorToUpdate);
+                    IBook bookToUpdate = _context.ConvertToIBook(book);
+                    _context.UpdateBook(bookToUpdate);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.ID))
+                    if (!BookDTOExists(book.ID))
                     {
                         return NotFound();
                     }
@@ -127,11 +129,10 @@ namespace BookCatalogue.Core.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(author);
+            return View(book);
         }
 
-        // GET: Authors/Delete/5
+        // GET: Books/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -139,34 +140,34 @@ namespace BookCatalogue.Core.Controllers
                 return NotFound();
             }
 
-            var author = await _context.GetAuthorAsync(id.Value);
+            var book = await _context.GetBookAsync(id.Value);
 
-            if (author == null)
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(ConvertToAuthorDTO(author));
+            return View(ConvertToBookDTO(book));
         }
 
-        // POST: Authors/Delete/5
+        // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var author = await _context.GetAuthorAsync(id);
-            if (author != null)
+            var book = await _context.GetBookAsync(id);
+            if (book != null)
             {
-                _context.RemoveAuthor(author);
+                _context.RemoveBook(book);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(Guid id)
+        private bool BookDTOExists(Guid id)
         {
-            return _context.AuthorExists(id);
+            return _context.BookExists(id);
         }
 
         private AuthorDTO ConvertToAuthorDTO(IAuthor author)
@@ -179,6 +180,20 @@ namespace BookCatalogue.Core.Controllers
                 DateOfBirth = author.DateOfBirth
             };
             return authorDTO;
+        }
+
+        private BookDTO ConvertToBookDTO(IBook book)
+        {
+            BookDTO bookDTO = new()
+            {
+                ID = book.ID,
+                Title = book.Title,
+                ReleaseYear = book.ReleaseYear,
+                Author = ConvertToAuthorDTO(book.Author),
+                Language = book.Language,
+                Genre = book.Genre
+            };
+            return bookDTO;
         }
     }
 }
