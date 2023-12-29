@@ -15,12 +15,12 @@ namespace BookCatalogue
 
             BLC.BLC blc = BLC.BLC.GetInstance(libraryName);
 
-            foreach (var a in blc.GetAuthors())
+            foreach (var a in blc.GetAllAuthors())
             {
                 Console.WriteLine($"{a.ID}: {a.Name} {a.Surname}");
             }
 
-            foreach (var b in blc.GetBooks())
+            foreach (var b in blc.GetAllBooks())
             {
                 Console.WriteLine($"{b.ID}: {b.Author.Name} {b.Author.Surname}: {b.Title}, {b.ReleaseYear}");
             }

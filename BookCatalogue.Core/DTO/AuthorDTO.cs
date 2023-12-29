@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookCatalogue.UIWeb.Models
+namespace BookCatalogue.Core.DTO
 {
     public class AuthorDTO
     {

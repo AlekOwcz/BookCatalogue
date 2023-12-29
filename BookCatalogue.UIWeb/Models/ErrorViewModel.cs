@@ -1,4 +1,4 @@
-namespace BookCatalogue.UIWeb.Models
+namespace BookCatalogue.Core.DTO
 {
     public class ErrorViewModel
     {

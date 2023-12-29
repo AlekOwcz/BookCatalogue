@@ -1,5 +1,8 @@
 ﻿using BookCatalogue.Core;
+using BookCatalogue.Core.DTO;
+using BookCatalogue.DAOMock.BO;
 using BookCatalogue.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,24 +56,75 @@ namespace BookCatalogue.DAOMock
             };
         }
 
+        public Task<int> SaveChangesAsync()
+        {
+            return Task.FromResult(1);
+        }
+
         public void AddAuthor(IAuthor author)
         {
-            author.ID = Guid.NewGuid();
-            _authors.Add(author);
+            if (author is Author)
+            {
+                author.ID = Guid.NewGuid();
+                _authors.Add(author);
+            }
+            else
+            {
+                throw new ArgumentException("The author must be of type BookCatalogue.DAOMock.BO.Author.");
+            }
         }
 
         public void AddBook(IBook book)
         {
-            book.ID = Guid.NewGuid();
-            _books.Add(book);
+            if (book is Book)
+            {
+                book.ID = Guid.NewGuid();
+                _books.Add(book);
+            }
+            else
+            {
+                throw new ArgumentException("The book must be of type BookCatalogue.DAOMock.BO.Book.");
+            }
         }
+
+
+        public IAuthor ConvertToIAuthor(AuthorDTO authorDTO)
+        {
+            IAuthor author = new Author()
+            {
+                ID = authorDTO.ID,
+                Name = authorDTO.Name,
+                Surname = authorDTO.Surname,
+                DateOfBirth = authorDTO.DateOfBirth
+            };
+
+            return author;
+        }
+
+        public IBook ConvertToIBook(BookDTO bookDTO)
+        {
+            IBook book = new Book()
+            {
+                ID = bookDTO.ID,
+                Title = bookDTO.Title,
+                ReleaseYear = bookDTO.ReleaseYear,
+                Author = ConvertToIAuthor(bookDTO.Author),
+                Language = bookDTO.Language,
+                Genre = bookDTO.Genre
+            };
+
+            return book;
+        }
+
 
         public IAuthor CreateNewAuthor(string name, string surname, DateTime dateOfBirth)
         {
-            BO.Author author = new BO.Author();
-            author.Name = name;
-            author.Surname = surname;
-            author.DateOfBirth = dateOfBirth;
+            Author author = new Author
+            {
+                Name = name,
+                Surname = surname,
+                DateOfBirth = dateOfBirth
+            };
             return author;
         }
 
@@ -85,6 +139,7 @@ namespace BookCatalogue.DAOMock
             return book;
         }
 
+
         public void DeleteAuthor(IAuthor author)
         {
             _authors.Remove(author);
@@ -95,15 +150,48 @@ namespace BookCatalogue.DAOMock
             _books.Remove(book);
         }
 
+
         public IEnumerable<IAuthor> GetAllAuthors()
         {
-            return _authors;
+            return _authors.AsEnumerable();
+        }
+
+        public Task<IEnumerable<IAuthor>> GetAllAuthorsAsync()
+        {
+            return Task.FromResult(GetAllAuthors());
         }
 
         public IEnumerable<IBook> GetAllBooks()
         {
-            return _books;
+            return _books.AsEnumerable();
         }
+
+        public Task<IEnumerable<IBook>> GetAllBooksAsync()
+        {
+            return Task.FromResult(GetAllBooks());
+        }
+
+
+        public IAuthor? GetAuthor(Guid id)
+        {
+            return _authors.FirstOrDefault(a => a.ID == id);
+        }
+
+        public async Task<IAuthor?> GetAuthorAsync(Guid id)
+        {
+            return await Task.FromResult(GetAuthor(id));
+        }
+
+        public IBook? GetBook(Guid id)
+        {
+            return _books.FirstOrDefault(b => b.ID == id);
+        }
+
+        public async Task<IBook?> GetBookAsync(Guid id)
+        {
+            return await Task.FromResult(GetBook(id));
+        }
+
 
         public void UpdateAuthor(IAuthor author)
         {
@@ -131,6 +219,16 @@ namespace BookCatalogue.DAOMock
                 existingBook.ReleaseYear = book.ReleaseYear;
                 existingBook.Genre = book.Genre;
             }
+        }
+
+        public bool AuthorExists(Guid id)
+        {
+            return _authors.Any(a => a.ID == id);
+        }
+
+        public bool BookExists(Guid id)
+        {
+            return _books.Any(b => b.ID == id);
         }
     }
 }

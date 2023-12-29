@@ -1,8 +1,8 @@
-using BookCatalogue.UIWeb.Models;
+using BookCatalogue.Core.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace BookCatalogue.UIWeb.Controllers
+namespace BookCatalogue.Core.Controllers
 {
     public class HomeController : Controller
     {

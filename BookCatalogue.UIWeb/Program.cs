@@ -1,6 +1,6 @@
 using BookCatalogue.BLC;
 
-namespace BookCatalogue.UIWeb
+namespace BookCatalogue.Core
 {
     public class Program
     {

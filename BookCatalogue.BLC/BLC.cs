@@ -1,12 +1,15 @@
 ﻿using System.Reflection;
+using BookCatalogue.Core.DTO;
 using BookCatalogue.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookCatalogue.BLC
 {
     public class BLC
     {
-        private static BLC? _instance = null;
-        private IDAO? _dao = null;
+        private static BLC? _instance;
+        private readonly IDAO? _dao;
+
 
         private BLC(string libraryName)
         {
@@ -58,22 +61,179 @@ namespace BookCatalogue.BLC
             return _instance;
         }
 
-        public IEnumerable<IAuthor> GetAuthors()
-        {
-            if( _dao == null ) 
-            { 
-                return new List<IAuthor>();  
-            }
-            return _dao.GetAllAuthors();
-        }
 
-        public IEnumerable<IBook> GetBooks()
+        public IAuthor ConvertToIAuthor(AuthorDTO authorDTO)
         {
             if (_dao == null)
             {
-                return new List<IBook>();
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.ConvertToIAuthor(authorDTO);
+        }
+        
+        public IBook ConvertToIBook(BookDTO bookDTO)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.ConvertToIBook(bookDTO);
+        }
+
+
+        public Task<int> SaveChangesAsync()
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.SaveChangesAsync();
+        }
+
+
+        public IAuthor? GetAuthor(Guid id) 
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.GetAuthor(id);
+        }
+
+        public async Task<IAuthor?> GetAuthorAsync(Guid id)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return await _dao.GetAuthorAsync(id);
+        }
+
+        public IEnumerable<IAuthor?> GetAllAuthors()
+        {
+            if( _dao == null ) 
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.GetAllAuthors();
+        }
+        
+        public async Task<IEnumerable<IAuthor?>> GetAllAuthorsAsync()
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return await _dao.GetAllAuthorsAsync();
+        }
+
+        public IBook? GetBook(Guid id)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.GetBook(id);
+        }
+        
+        public async Task<IBook?> GetBookAsync(Guid id)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return await _dao.GetBookAsync(id);
+        }
+        
+        public IEnumerable<IBook?> GetAllBooks()
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
             }
             return _dao.GetAllBooks();
+        }
+        
+        public async Task<IEnumerable<IBook?>> GetAllBooksAsync()
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return await _dao.GetAllBooksAsync();
+        }
+
+
+        public void AddAuthor(IAuthor author)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.AddAuthor(author);
+        }
+
+        public void AddBook(IBook book)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.AddBook(book);
+        }
+
+
+        public void UpdateAuthor(IAuthor author)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.UpdateAuthor(author);
+        }
+        public void UpdateBook(IBook book)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.UpdateBook(book);
+        }
+
+
+        public void RemoveAuthor(IAuthor author)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.DeleteAuthor(author);
+        }
+        public void RemoveBook(IBook book)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            _dao.DeleteBook(book);
+        }
+
+
+        public bool AuthorExists(Guid id)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.AuthorExists(id);
+        }
+        public bool BookExists(Guid id)
+        {
+            if (_dao == null)
+            {
+                throw new Exception($"No instance of DAO found");
+            }
+            return _dao.BookExists(id);
         }
     }
 }

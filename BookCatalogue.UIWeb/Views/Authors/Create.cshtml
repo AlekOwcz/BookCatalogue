@@ -1,4 +1,4 @@
-﻿@model BookCatalogue.UIWeb.Models.AuthorDTO
+﻿@model BookCatalogue.Core.DTO.AuthorDTO
 
 @{
     ViewData["Title"] = "Create";
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">

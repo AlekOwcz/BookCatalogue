@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookCatalogue.BLC;
-using BookCatalogue.UIWeb.Models;
+using BookCatalogue.Core.DTO;
+using BookCatalogue.Interfaces;
 
-namespace BookCatalogue.UIWeb.Controllers
+namespace BookCatalogue.Core.Controllers
 {
     public class AuthorsController : Controller
     {
@@ -22,7 +23,7 @@ namespace BookCatalogue.UIWeb.Controllers
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            var authors = _context.GetAuthors();
+            var authors = await _context.GetAllAuthorsAsync();
             var authorViewModels = authors.Select(a => new AuthorDTO
             {
                 ID = a.ID,
@@ -36,20 +37,27 @@ namespace BookCatalogue.UIWeb.Controllers
         // GET: Authors/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            throw new NotImplementedException();
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var author = await _context.GetAuthorAsync(id.Value);
 
-            //var author = await _context.Authors
-            //    .FirstOrDefaultAsync(m => m.ID == id);
-            //if (author == null)
-            //{
-            //    return NotFound();
-            //}
 
-            //return View(author);
+            if (author == null)
+            {
+                return NotFound();
+            }
+
+            var authorDTO = new AuthorDTO
+            {
+                ID = author.ID,
+                Name = author.Name,
+                Surname = author.Surname,
+                DateOfBirth = author.DateOfBirth
+            };
+
+            return View(authorDTO);
         }
 
         // GET: Authors/Create
@@ -65,32 +73,38 @@ namespace BookCatalogue.UIWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
         {
-            throw new NotImplementedException();
-            //if (ModelState.IsValid)
-            //{
-            //    author.ID = Guid.NewGuid();
-            //    _context.Add(author);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(author);
+            if (ModelState.IsValid)
+            {
+                author.ID = Guid.NewGuid();
+                IAuthor authorToAdd = _context.ConvertToIAuthor(author);
+                _context.AddAuthor(authorToAdd);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(author);
         }
 
         // GET: Authors/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            throw new NotImplementedException();
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            //var author = await _context.Authors.FindAsync(id);
-            //if (author == null)
-            //{
-            //    return NotFound();
-            //}
-            //return View(author);
+            var author = await _context.GetAuthorAsync(id.Value);
+            if (author == null)
+            {
+                return NotFound();
+            }
+            var authorDTO = new AuthorDTO
+            {
+                ID = author.ID,
+                Name = author.Name,
+                Surname = author.Surname,
+                DateOfBirth = author.DateOfBirth
+            };
+            return View(authorDTO);
         }
 
         // POST: Authors/Edit/5
@@ -100,52 +114,56 @@ namespace BookCatalogue.UIWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
         {
-            throw new NotImplementedException();
-            //if (id != author.ID)
-            //{
-            //    return NotFound();
-            //}
+            if (id != author.ID)
+            {
+                return NotFound();
+            }
 
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(author);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!AuthorExists(author.ID))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(author);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    IAuthor authorToUpdate = _context.ConvertToIAuthor(author);
+                    _context.UpdateAuthor(authorToUpdate);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AuthorExists(author.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(author);
         }
 
         // GET: Authors/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            throw new NotImplementedException();
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            //var author = await _context.Authors
-            //    .FirstOrDefaultAsync(m => m.ID == id);
-            //if (author == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(author);
+            var author = await _context.GetAuthorAsync(id.Value);
+            if (author == null)
+            {
+                return NotFound();
+            }
+            var authorDTO = new AuthorDTO
+            {
+                ID = author.ID,
+                Name = author.Name,
+                Surname = author.Surname,
+                DateOfBirth = author.DateOfBirth
+            };
+            return View(authorDTO);
         }
 
         // POST: Authors/Delete/5
@@ -153,21 +171,19 @@ namespace BookCatalogue.UIWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            throw new NotImplementedException();
-            //var author = await _context.Authors.FindAsync(id);
-            //if (author != null)
-            //{
-            //    _context.Authors.Remove(author);
-            //}
+            var author = await _context.GetAuthorAsync(id);
+            if (author != null)
+            {
+                _context.RemoveAuthor(author);
+            }
 
-            //await _context.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool AuthorExists(Guid id)
         {
-            throw new NotImplementedException();
-            //return _context.Authors.Any(e => e.ID == id);
+            return _context.AuthorExists(id);
         }
     }
 }
