@@ -9,17 +9,34 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    Search & Filters:
+    <div class="form-actions no-color">
+        <p>
+            Name or Surname: 
+            <input type="text" name="SearchStringName" value="@ViewData["CurrentFilterName"]" />
+        </p>
+        <p>
+            Born before: <input type="date" name="SearchDateBefore" value="@ViewData["CurrentFilterBornBefore"]" />
+        </p>
+        <p>
+            Born after: <input type="date" name="SearchDateAfter" value="@ViewData["CurrentFilterBornAfter"]" />
+        </p>
+    </div>
+    <input type="submit" value="Search" class="btn btn-default" />
+    <a asp-action="Index">Back to Full List</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index" asp-route-sortOrder="Name" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Name)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Surname)
+                <a asp-action="Index" asp-route-sortOrder="Surname" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Surname)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
+                <a asp-action="Index" asp-route-sortOrder="DateOfBirth" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.DateOfBirth)</a>
             </th>
             <th></th>
         </tr>

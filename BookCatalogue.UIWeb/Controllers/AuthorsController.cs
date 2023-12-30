@@ -8,12 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using BookCatalogue.BLC;
 using BookCatalogue.Core.DTO;
 using BookCatalogue.Interfaces;
+using System.Globalization;
 
 namespace BookCatalogue.Core.Controllers
 {
     public class AuthorsController : Controller
     {
         private readonly BLC.BLC _context;
+        private static int _order = 1;
 
         public AuthorsController(BLC.BLC BLC)
         {
@@ -21,16 +23,92 @@ namespace BookCatalogue.Core.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentSort, string searchStringName, DateTime? searchDateBefore, DateTime? searchDateAfter)
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["PreviousSort"] = currentSort;
+            ViewData["CurrentFilterName"] = searchStringName;
+            if(searchDateBefore != null)
+            {
+                ViewData["CurrentFilterBornBefore"] = ((DateTime)searchDateBefore).ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                ViewData["CurrentFilterBornBefore"] = searchDateBefore;
+            }
+            if (searchDateAfter != null)
+            {
+                ViewData["CurrentFilterBornAfter"] = ((DateTime)searchDateAfter).ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                ViewData["CurrentFilterBornAfter"] = searchDateAfter;
+            }            
+
             var authors = await _context.GetAllAuthorsAsync();
             var authorViewModels = authors.Select(a => new AuthorDTO
             {
-                ID = a.ID,
+                ID = a!.ID,
                 Name = a.Name,
                 Surname = a.Surname,
                 DateOfBirth = a.DateOfBirth
             }).ToList();
+
+            if (!string.IsNullOrEmpty(searchStringName))
+            {
+                authorViewModels = authorViewModels.Where(s => s.Surname.ToLower().Trim().Contains(searchStringName.ToLower().Trim())
+                                       || s.Name.ToLower().Trim().Contains(searchStringName.ToLower().Trim())).ToList();
+            }
+            if(searchDateBefore != null)
+            {
+                authorViewModels = authorViewModels.Where(s => s.DateOfBirth <= searchDateBefore.Value).ToList();
+            }
+            if (searchDateAfter != null)
+            {
+                authorViewModels = authorViewModels.Where(s => s.DateOfBirth >= searchDateAfter.Value).ToList();
+            }
+
+            if (sortOrder == currentSort)
+            {
+                _order *= -1;
+            }
+            if (_order == -1)
+            {
+                switch (sortOrder)
+                {
+                    case "Name":
+                        authorViewModels = [.. authorViewModels.OrderBy(s => s.Name)];
+                        break;
+                    case "Surname":
+                        authorViewModels = [.. authorViewModels.OrderBy(s => s.Surname)];
+                        break;
+                    case "DateOfBirth":
+                        authorViewModels = [.. authorViewModels.OrderBy(s => s.DateOfBirth)];
+                        break;
+                    default:
+                        authorViewModels = [.. authorViewModels.OrderBy(s => s.Name)];
+                        break;
+                }
+            }
+            else
+            {
+                switch (sortOrder)
+                {
+                    case "Name":
+                        authorViewModels = [.. authorViewModels.OrderByDescending(s => s.Name)];
+                        break;
+                    case "Surname":
+                        authorViewModels = [.. authorViewModels.OrderByDescending(s => s.Surname)];
+                        break;
+                    case "DateOfBirth":
+                        authorViewModels = [.. authorViewModels.OrderByDescending(s => s.DateOfBirth)];
+                        break;
+                    default:
+                        authorViewModels = [.. authorViewModels.OrderByDescending(s => s.Name)];
+                        break;
+                }
+            }
+
             return View(authorViewModels);
         }
 

@@ -14,25 +14,122 @@ namespace BookCatalogue.UIWeb.Controllers
     public class BooksController : Controller
     {
         private readonly BLC.BLC _context;
-
+        private static int _order = 1;
         public BooksController(BLC.BLC BLC)
         {
             _context = BLC;
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string sortOrder, 
+            string currentSort, 
+            string searchStringTitle, 
+            string searchStringAuthor, 
+            string searchStringGenre, 
+            string searchStringLanguage,
+            int? searchNumberReleaseYearBefore,
+            int? searchNumberReleaseYearAfter
+            )
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["PreviousSort"] = currentSort;
+            ViewData["CurrentFilterTitle"] = searchStringTitle;
+            ViewData["CurrentFilterAuthor"] = searchStringAuthor;
+            ViewData["CurrentFilterGenre"] = searchStringGenre;
+            ViewData["CurrentFilterLanguage"] = searchStringLanguage;
+            ViewData["CurrentFilterReleaseYearBefore"] = searchNumberReleaseYearBefore;
+            ViewData["CurrentFilterReleaseYearAfter"] = searchNumberReleaseYearAfter;
             var books = await _context.GetAllBooksAsync();
             var booksViewModels = books.Select(b => new BookDTO
             {
-                ID = b.ID,
+                ID = b!.ID,
                 Title = b.Title,
                 ReleaseYear = b.ReleaseYear,
                 Author = ConvertToAuthorDTO(b.Author),
                 Language = b.Language,
                 Genre = b.Genre
             }).ToList();
+
+            if (!string.IsNullOrEmpty(searchStringGenre))
+            {
+                booksViewModels = booksViewModels.Where(s => s.Genre.ToString().ToLower().Trim().Contains(searchStringGenre.ToLower().Trim())).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchStringLanguage))
+            {
+                booksViewModels = booksViewModels.Where(s => s.Language.ToString().ToLower().Trim().Contains(searchStringLanguage.ToLower().Trim())).ToList();
+            }
+            if (searchNumberReleaseYearBefore.HasValue)
+            {
+                booksViewModels = booksViewModels.Where(s => s!.ReleaseYear <= searchNumberReleaseYearBefore.Value).ToList();
+            }
+            if (searchNumberReleaseYearAfter.HasValue)
+            {
+                booksViewModels = booksViewModels.Where(s => s!.ReleaseYear >= searchNumberReleaseYearAfter.Value).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchStringTitle))
+            {
+                booksViewModels = booksViewModels.Where(s => s.Title.ToLower().Trim().Contains(searchStringTitle.ToLower().Trim())).ToList();
+            }
+            if (!string.IsNullOrEmpty(searchStringAuthor))
+            {
+                booksViewModels = booksViewModels.Where(s => s.Author.Surname.ToLower().Trim().Contains(searchStringAuthor.ToLower().Trim())
+                                       || s.Author.Name.ToLower().Trim().Contains(searchStringAuthor.ToLower().Trim())).ToList();
+            }
+            if (sortOrder == currentSort)
+            {
+                _order *= -1;
+            }
+            if (_order == -1)
+            {
+                switch (sortOrder)
+                {
+                    case "Title":
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.Title)];
+                        break;
+                    case "Release":
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.ReleaseYear)];
+                        break;
+                    case "Author":
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.Author.Surname)];
+                        break;
+                    case "Language":
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.Language)];
+                        break;
+                    case "Genre":
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.Genre)];
+                        break;
+                    default:
+                        booksViewModels = [.. booksViewModels.OrderBy(s => s.Title)];
+                        break;
+                }
+            }
+            else
+            {
+                switch (sortOrder)
+                {
+                    case "Title":
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.Title)];
+                        break;
+                    case "Release":
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.ReleaseYear)];
+                        break;
+                    case "Author":
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.Author.Surname)];
+                        break;
+                    case "Language":
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.Language)];
+                        break;
+                    case "Genre":
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.Genre)];
+                        break;
+                    default:
+                        booksViewModels = [.. booksViewModels.OrderByDescending(s => s.Title)];
+                        break;
+                }
+            }
+            
+
             return View(booksViewModels);
         }
 

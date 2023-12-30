@@ -9,23 +9,67 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-action="Index" method="get">
+    Search & Filters:
+    <div class="form-actions no-color">
+        <p>
+            Title: 
+            <input type="text" name="SearchStringTitle" value="@ViewData["CurrentFilterTitle"]" />
+        </p>
+        <p>
+            Author: 
+            <input type="text" name="SearchStringAuthor" value="@ViewData["CurrentFilterAuthor"]" />
+        </p>
+        <p>
+            Released before:
+            <input type="number" name="SearchNumberReleaseYearBefore" value="@ViewData["CurrentFilterReleaseYearBefore"]" />
+        </p>
+        <p>
+            Released after:
+            <input type="number" name="SearchNumberReleaseYearAfter" value="@ViewData["CurrentFilterReleaseYearAfter"]" />
+        </p>
+        <p>
+            Genre:
+            <select name="SearchStringGenre">
+                <option value=""></option>
+                @foreach (var genre in Enum.GetValues(typeof(Genre)))
+                {
+                    <!option value="@genre" @(ViewData["CurrentFilterGenre"] != null && ViewData["CurrentFilterGenre"].ToString() == genre.ToString() ? "selected" : "")>@genre</!option>
+                }
+            </select>
+        </p>
+        <p>
+            Language:
+            <select name="SearchStringLanguage">
+                <option value=""></option>
+                @foreach (var language in Enum.GetValues(typeof(Language)))
+                {
+                    <!option value="@language" @(ViewData["CurrentFilterLanguage"] != null && ViewData["CurrentFilterLanguage"].ToString() == language.ToString() ? "selected" : "")>@language</!option>
+                }
+            </select>
+        </p>
+    </div>
+    <input type="submit" value="Search" class="btn btn-default" />
+    <a asp-action="Index">Back to Full List</a>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                <a asp-action="Index" asp-route-sortOrder="Title" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Title)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReleaseYear)
+                <a asp-action="Index" asp-route-sortOrder="Release" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.ReleaseYear)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author.FullName)
+                <a asp-action="Index" asp-route-sortOrder="Author" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Author.FullName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Language)
+                <a asp-action="Index" asp-route-sortOrder="Language" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Language)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                <a asp-action="Index" asp-route-sortOrder="Genre" asp-route-currentSort="@ViewData["CurrentSort"]">@Html.DisplayNameFor(model => model.Genre)</a>
             </th>
             <th></th>
         </tr>
