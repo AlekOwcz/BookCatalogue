@@ -80,7 +80,8 @@ namespace BookCatalogue.DAOSQL
                 Language = bookDTO.Language,
                 Genre = bookDTO.Genre
             };
-            book.Author = ConvertToIAuthor(bookDTO.Author);
+            IAuthor? author = GetAuthor(bookDTO.AuthorID) ?? throw new Exception("Author missing in the database");
+            book.Author = author;
 
             return book;
         }
@@ -156,12 +157,12 @@ namespace BookCatalogue.DAOSQL
 
         public IEnumerable<IBook> GetAllBooks()
         {
-            return _context.Books;
+            return _context.Books.Include(a => a.Author);
         }
 
         public async Task<IEnumerable<IBook>> GetAllBooksAsync()
         {
-            return await _context.Books.ToListAsync();
+            return await _context.Books.Include(a => a.Author).ToListAsync();
         }
 
         public IAuthor? GetAuthor(Guid id)
@@ -202,13 +203,21 @@ namespace BookCatalogue.DAOSQL
 
         public void UpdateBook(IBook book)
         {
-            var existingBook = _context.Books.FirstOrDefault(b => b.ID == book.ID);
+            var existingBook = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.ID == book.ID);
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;
                 if (book is Book bookEntity)
                 {
-                    book.Author = bookEntity.Author;
+                    var existingAuthor = _context.Authors.FirstOrDefault(a => a.ID == bookEntity.Author.ID);
+                    if (existingAuthor != null)
+                    {
+                        existingBook.Author = existingAuthor;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Author not found in the database.");
+                    }
                 }
                 else
                 {

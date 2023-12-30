@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BookCatalogue.DAOSQL.BO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,14 @@ namespace BookCatalogue.DAOSQL
             optionsBuilder.UseSqlite(_configuration.GetConnectionString("Sqlite"));
         }
 
-        public virtual DbSet<BO.Author> Authors { get; set; }
-        public virtual DbSet<BO.Book> Books { get; set; }
-
+        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<Book> Books { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Author>()
+                .HasMany(a => a.Books)
+                .WithOne(b => b.Author)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

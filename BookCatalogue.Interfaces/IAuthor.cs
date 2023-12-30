@@ -12,5 +12,6 @@ namespace BookCatalogue.Interfaces
         string Name { get; set; }
         string Surname { get; set; }
         DateTime DateOfBirth { get; set; }
+        public string FullName { get; }
     }
 }

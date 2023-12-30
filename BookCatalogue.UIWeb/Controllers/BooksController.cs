@@ -57,6 +57,7 @@ namespace BookCatalogue.UIWeb.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
+            PopulateAuthorsDropDownList(null);
             return View();
         }
 
@@ -65,8 +66,9 @@ namespace BookCatalogue.UIWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,ReleaseYear,Language,Genre")] BookDTO book)
+        public async Task<IActionResult> Create([Bind("ID,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
         {
+            ModelState.Remove("Author");
             if (ModelState.IsValid)
             {
                 book.ID = Guid.NewGuid();
@@ -75,6 +77,7 @@ namespace BookCatalogue.UIWeb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            PopulateAuthorsDropDownList(null);
             return View(book);
         }
 
@@ -92,8 +95,9 @@ namespace BookCatalogue.UIWeb.Controllers
             {
                 return NotFound();
             }
-
-            return View(ConvertToBookDTO(book));
+            var bookToUpdate = ConvertToBookDTO(book);
+            PopulateAuthorsDropDownList(bookToUpdate.AuthorID);
+            return View(bookToUpdate);
         }
 
         // POST: Books/Edit/5
@@ -101,18 +105,27 @@ namespace BookCatalogue.UIWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Title,ReleaseYear,Language,Genre")] BookDTO book)
+        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
         {
             if (id != book.ID)
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Author");
             if (ModelState.IsValid)
             {
                 try
                 {
                     IBook bookToUpdate = _context.ConvertToIBook(book);
+                    if (bookToUpdate.ReleaseYear <= bookToUpdate.Author.DateOfBirth.Year) 
+                    {
+                        ModelState.AddModelError("ReleaseYear", "The release year can not be before author's birth.");
+                    }
+                    if (!ModelState.IsValid) 
+                    {
+                        PopulateAuthorsDropDownList(book.AuthorID);
+                        return View(book);
+                    }
                     _context.UpdateBook(bookToUpdate);
                     await _context.SaveChangesAsync();
                 }
@@ -129,6 +142,7 @@ namespace BookCatalogue.UIWeb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            PopulateAuthorsDropDownList(book.AuthorID);
             return View(book);
         }
 
@@ -189,11 +203,26 @@ namespace BookCatalogue.UIWeb.Controllers
                 ID = book.ID,
                 Title = book.Title,
                 ReleaseYear = book.ReleaseYear,
+                AuthorID = book.Author.ID,
                 Author = ConvertToAuthorDTO(book.Author),
                 Language = book.Language,
                 Genre = book.Genre
             };
             return bookDTO;
+        }
+
+        private void PopulateAuthorsDropDownList(Guid? selectedAuthor)
+        {
+            IEnumerable<IAuthor?> authors = _context.GetAllAuthors();
+            var authorViewModels = authors.Select(a => new AuthorDTO
+            {
+                ID = a.ID,
+                Name = a.Name,
+                Surname = a.Surname,
+                DateOfBirth = a.DateOfBirth
+            }).OrderBy(a => a.Surname).ThenBy(a => a.Name).ToList();
+            authorViewModels.Insert(0, new AuthorDTO { ID = Guid.Empty, Name = "Select an author", Surname = "", DateOfBirth = new DateTime() });
+            ViewData["Authors"] = new SelectList(authorViewModels, "ID", "FullName", selectedAuthor);
         }
     }
 }

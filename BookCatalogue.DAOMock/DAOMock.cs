@@ -18,15 +18,15 @@ namespace BookCatalogue.DAOMock
 
         public DAOMock()
         {
-            _authors = new List<IAuthor>()
-            {
-                new BO.Author(){ ID = Guid.NewGuid(), Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
-                new BO.Author(){ ID = Guid.NewGuid(), Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
-                new BO.Author(){ ID = Guid.NewGuid(), Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
-            };
-            _books = new List<IBook>()
-            {
-                new BO.Book()
+            _authors =
+            [
+                new Author(){ ID = Guid.NewGuid(), Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
+                new Author(){ ID = Guid.NewGuid(), Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
+                new Author(){ ID = Guid.NewGuid(), Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
+            ];
+            _books =
+            [
+                new Book()
                 { 
                     ID = Guid.NewGuid(), 
                     Title="Pan Tadeusz", 
@@ -35,7 +35,7 @@ namespace BookCatalogue.DAOMock
                     Language=Language.Polish,
                     Genre=Genre.Epic
                 },
-                new BO.Book()
+                new Book()
                 {
                     ID = Guid.NewGuid(),
                     Title="Dziady, część III",
@@ -44,7 +44,7 @@ namespace BookCatalogue.DAOMock
                     Language=Language.Polish,
                     Genre=Genre.Drama
                 },
-                new BO.Book()
+                new Book()
                 {
                     ID = Guid.NewGuid(),
                     Title="Zbrodnia i kara",
@@ -53,7 +53,7 @@ namespace BookCatalogue.DAOMock
                     Language=Language.Russian,
                     Genre=Genre.Psychological
                 }
-            };
+            ];
         }
 
         public Task<int> SaveChangesAsync()
@@ -108,10 +108,11 @@ namespace BookCatalogue.DAOMock
                 ID = bookDTO.ID,
                 Title = bookDTO.Title,
                 ReleaseYear = bookDTO.ReleaseYear,
-                Author = ConvertToIAuthor(bookDTO.Author),
                 Language = bookDTO.Language,
                 Genre = bookDTO.Genre
             };
+            IAuthor? author = GetAuthor(bookDTO.AuthorID) ?? throw new Exception("Author missing in the database");
+            book.Author = author;
 
             return book;
         }
@@ -142,6 +143,7 @@ namespace BookCatalogue.DAOMock
 
         public void DeleteAuthor(IAuthor author)
         {
+            _books.RemoveAll(b => b.Author.ID == author.ID);
             _authors.Remove(author);
         }
 

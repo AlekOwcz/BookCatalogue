@@ -9,6 +9,15 @@ namespace BookCatalogue.Core.DTO
         public string Surname { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:d}")]
+        [Display(Name = "Date of birth")]
         public DateTime DateOfBirth { get; set; }
+        [Display(Name = "Author")]
+        public string FullName
+        {
+            get
+            {
+                return $"{Name} {Surname}";
+            }
+        }
     }
 }

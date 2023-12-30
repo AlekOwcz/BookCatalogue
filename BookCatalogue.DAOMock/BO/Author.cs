@@ -13,5 +13,13 @@ namespace BookCatalogue.DAOMock.BO
         public string Name { get; set; }
         public string Surname { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public string FullName
+        {
+            get
+            {
+                return $"{Name} {Surname}";
+            }
+        }
+
     }
 }
