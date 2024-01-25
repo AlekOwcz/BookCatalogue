@@ -170,6 +170,15 @@ namespace BookCatalogue.UIWeb.Controllers
             {
                 book.ID = Guid.NewGuid();
                 IBook bookToAdd = _context.ConvertToIBook(book);
+                if (bookToAdd.ReleaseYear <= bookToAdd.Author.DateOfBirth.Year)
+                {
+                    ModelState.AddModelError("ReleaseYear", "The release year can not be before author's birth.");
+                }
+                if (!ModelState.IsValid)
+                {
+                    PopulateAuthorsDropDownList(null);
+                    return View(book);
+                }
                 _context.AddBook(bookToAdd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
