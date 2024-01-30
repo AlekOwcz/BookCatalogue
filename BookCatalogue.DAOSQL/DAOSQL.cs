@@ -61,7 +61,7 @@ namespace BookCatalogue.DAOSQL
         {
             IAuthor author = new Author()
             {
-                ID = authorDTO.ID,
+                Id = authorDTO.Id,
                 Name = authorDTO.Name,
                 Surname = authorDTO.Surname,
                 DateOfBirth = authorDTO.DateOfBirth
@@ -74,7 +74,7 @@ namespace BookCatalogue.DAOSQL
         {
             IBook book = new Book()
             {
-                ID = bookDTO.ID,
+                Id = bookDTO.Id,
                 Title = bookDTO.Title,
                 ReleaseYear = bookDTO.ReleaseYear,
                 Language = bookDTO.Language,
@@ -120,7 +120,7 @@ namespace BookCatalogue.DAOSQL
 
         public void DeleteAuthor(IAuthor author)
         {
-            var authorToDelete = _context.Authors.FirstOrDefault(a => a.ID == author.ID);
+            var authorToDelete = _context.Authors.FirstOrDefault(a => a.Id == author.Id);
             if (authorToDelete != null)
             {
                 _context.Authors.Remove(authorToDelete);
@@ -134,7 +134,7 @@ namespace BookCatalogue.DAOSQL
 
         public void DeleteBook(IBook book)
         {
-            var bookToDelete = _context.Books.FirstOrDefault(b => b.ID == book.ID);
+            var bookToDelete = _context.Books.FirstOrDefault(b => b.Id == book.Id);
             if (bookToDelete != null)
             {
                 _context.Books.Remove(bookToDelete);
@@ -167,28 +167,28 @@ namespace BookCatalogue.DAOSQL
 
         public IAuthor? GetAuthor(Guid id)
         {
-            return _context.Authors.FirstOrDefault(a => a.ID == id);
+            return _context.Authors.FirstOrDefault(a => a.Id == id);
         }
 
         public async Task<IAuthor?> GetAuthorAsync(Guid id)
         {
-            return await _context.Authors.FirstOrDefaultAsync(a => a.ID == id);
+            return await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public IBook? GetBook(Guid id)
         {
-            return _context.Books.FirstOrDefault(b => b.ID == id);
+            return _context.Books.FirstOrDefault(b => b.Id == id);
         }
 
         public async Task<IBook?> GetBookAsync(Guid id)
         {
-            return await _context.Books.FirstOrDefaultAsync(b => b.ID == id);
+            return await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
         }
 
 
         public void UpdateAuthor(IAuthor author)
         {
-            var existingAuthor = _context.Authors.FirstOrDefault(a => a.ID == author.ID);
+            var existingAuthor = _context.Authors.FirstOrDefault(a => a.Id == author.Id);
             if (existingAuthor != null)
             {
                 existingAuthor.Name = author.Name;
@@ -203,13 +203,13 @@ namespace BookCatalogue.DAOSQL
 
         public void UpdateBook(IBook book)
         {
-            var existingBook = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.ID == book.ID);
+            var existingBook = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == book.Id);
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;
                 if (book is Book bookEntity)
                 {
-                    var existingAuthor = _context.Authors.FirstOrDefault(a => a.ID == bookEntity.Author.ID);
+                    var existingAuthor = _context.Authors.FirstOrDefault(a => a.Id == bookEntity.Author.Id);
                     if (existingAuthor != null)
                     {
                         existingBook.Author = existingAuthor;
@@ -235,12 +235,12 @@ namespace BookCatalogue.DAOSQL
 
         public bool AuthorExists(Guid id)
         {
-            return _context.Authors.Any(a => a.ID == id);
+            return _context.Authors.Any(a => a.Id == id);
         }
 
         public bool BookExists(Guid id)
         {
-            return _context.Books.Any(b => b.ID == id);
+            return _context.Books.Any(b => b.Id == id);
         }
     }
 }

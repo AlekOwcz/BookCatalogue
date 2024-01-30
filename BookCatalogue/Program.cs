@@ -17,12 +17,12 @@ namespace BookCatalogue
 
             foreach (var a in blc.GetAllAuthors())
             {
-                Console.WriteLine($"{a.ID}: {a.Name} {a.Surname}");
+                Console.WriteLine($"{a.Id}: {a.Name} {a.Surname}");
             }
 
             foreach (var b in blc.GetAllBooks())
             {
-                Console.WriteLine($"{b.ID}: {b.Author.Name} {b.Author.Surname}: {b.Title}, {b.ReleaseYear}");
+                Console.WriteLine($"{b.Id}: {b.Author.Name} {b.Author.Surname}: {b.Title}, {b.ReleaseYear}");
             }
         }
     }

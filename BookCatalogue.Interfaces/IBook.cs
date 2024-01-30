@@ -4,7 +4,7 @@ namespace BookCatalogue.Interfaces
 {
     public interface IBook
     {
-        Guid ID { get; set; }
+        Guid Id { get; set; }
         string Title { get; set; }
         int ReleaseYear { get; set; }
         IAuthor Author { get; set; }

@@ -43,7 +43,7 @@ namespace BookCatalogue.UIWeb.Controllers
             var books = await _context.GetAllBooksAsync();
             var booksViewModels = books.Select(b => new BookDTO
             {
-                ID = b!.ID,
+                Id = b!.Id,
                 Title = b.Title,
                 ReleaseYear = b.ReleaseYear,
                 Author = ConvertToAuthorDTO(b.Author),
@@ -168,7 +168,7 @@ namespace BookCatalogue.UIWeb.Controllers
             ModelState.Remove("Author");
             if (ModelState.IsValid)
             {
-                book.ID = Guid.NewGuid();
+                book.Id = Guid.NewGuid();
                 IBook bookToAdd = _context.ConvertToIBook(book);
                 if (bookToAdd.ReleaseYear <= bookToAdd.Author.DateOfBirth.Year)
                 {
@@ -213,7 +213,7 @@ namespace BookCatalogue.UIWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ID,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
         {
-            if (id != book.ID)
+            if (id != book.Id)
             {
                 return NotFound();
             }
@@ -237,7 +237,7 @@ namespace BookCatalogue.UIWeb.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookDTOExists(book.ID))
+                    if (!BookDTOExists(book.Id))
                     {
                         return NotFound();
                     }
@@ -294,7 +294,7 @@ namespace BookCatalogue.UIWeb.Controllers
         {
             AuthorDTO authorDTO = new()
             {
-                ID = author.ID,
+                Id = author.Id,
                 Name = author.Name,
                 Surname = author.Surname,
                 DateOfBirth = author.DateOfBirth
@@ -306,10 +306,10 @@ namespace BookCatalogue.UIWeb.Controllers
         {
             BookDTO bookDTO = new()
             {
-                ID = book.ID,
+                Id = book.Id,
                 Title = book.Title,
                 ReleaseYear = book.ReleaseYear,
-                AuthorID = book.Author.ID,
+                AuthorID = book.Author.Id,
                 Author = ConvertToAuthorDTO(book.Author),
                 Language = book.Language,
                 Genre = book.Genre
@@ -322,12 +322,12 @@ namespace BookCatalogue.UIWeb.Controllers
             IEnumerable<IAuthor?> authors = _context.GetAllAuthors();
             var authorViewModels = authors.Select(a => new AuthorDTO
             {
-                ID = a.ID,
+                Id = a.Id,
                 Name = a.Name,
                 Surname = a.Surname,
                 DateOfBirth = a.DateOfBirth
             }).OrderBy(a => a.Surname).ThenBy(a => a.Name).ToList();
-            authorViewModels.Insert(0, new AuthorDTO { ID = Guid.Empty, Name = "Select an author", Surname = "", DateOfBirth = new DateTime() });
+            authorViewModels.Insert(0, new AuthorDTO { Id = Guid.Empty, Name = "Select an author", Surname = "", DateOfBirth = new DateTime() });
             ViewData["Authors"] = new SelectList(authorViewModels, "ID", "FullName", selectedAuthor);
         }
     }

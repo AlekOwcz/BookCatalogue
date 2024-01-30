@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookCatalogue.DAOMock
 {
-    internal class DAOMock : IDAO
+    public class DAOMock : IDAO
     {
         private List<IBook> _books;
         private List<IAuthor> _authors;
@@ -20,15 +20,15 @@ namespace BookCatalogue.DAOMock
         {
             _authors =
             [
-                new Author(){ ID = Guid.NewGuid(), Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
-                new Author(){ ID = Guid.NewGuid(), Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
-                new Author(){ ID = Guid.NewGuid(), Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
+                new Author(){ Id = Guid.NewGuid(), Name = "Adam", Surname="Mickiewicz", DateOfBirth=new DateTime(1798, 12, 24) },
+                new Author(){ Id = Guid.NewGuid(), Name = "Henryk", Surname="Sienkiewicz", DateOfBirth=new DateTime(1846, 5, 5) },
+                new Author(){ Id = Guid.NewGuid(), Name = "Fiodor", Surname="Dostojewski", DateOfBirth=new DateTime(1812, 11, 11) },
             ];
             _books =
             [
                 new Book()
                 { 
-                    ID = Guid.NewGuid(), 
+                    Id = Guid.NewGuid(), 
                     Title="Pan Tadeusz", 
                     ReleaseYear=1834,
                     Author=_authors[0], 
@@ -37,7 +37,7 @@ namespace BookCatalogue.DAOMock
                 },
                 new Book()
                 {
-                    ID = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Title="Dziady, część III",
                     ReleaseYear=1832,
                     Author=_authors[0],
@@ -46,7 +46,7 @@ namespace BookCatalogue.DAOMock
                 },
                 new Book()
                 {
-                    ID = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Title="Zbrodnia i kara",
                     ReleaseYear=1867,
                     Author=_authors[2],
@@ -65,7 +65,7 @@ namespace BookCatalogue.DAOMock
         {
             if (author is Author)
             {
-                author.ID = Guid.NewGuid();
+                author.Id = Guid.NewGuid();
                 _authors.Add(author);
             }
             else
@@ -78,7 +78,7 @@ namespace BookCatalogue.DAOMock
         {
             if (book is Book)
             {
-                book.ID = Guid.NewGuid();
+                book.Id = Guid.NewGuid();
                 _books.Add(book);
             }
             else
@@ -92,7 +92,7 @@ namespace BookCatalogue.DAOMock
         {
             IAuthor author = new Author()
             {
-                ID = authorDTO.ID,
+                Id = authorDTO.Id,
                 Name = authorDTO.Name,
                 Surname = authorDTO.Surname,
                 DateOfBirth = authorDTO.DateOfBirth
@@ -105,7 +105,7 @@ namespace BookCatalogue.DAOMock
         {
             IBook book = new Book()
             {
-                ID = bookDTO.ID,
+                Id = bookDTO.Id,
                 Title = bookDTO.Title,
                 ReleaseYear = bookDTO.ReleaseYear,
                 Language = bookDTO.Language,
@@ -143,7 +143,7 @@ namespace BookCatalogue.DAOMock
 
         public void DeleteAuthor(IAuthor author)
         {
-            _books.RemoveAll(b => b.Author.ID == author.ID);
+            _books.RemoveAll(b => b.Author.Id == author.Id);
             _authors.Remove(author);
         }
 
@@ -176,7 +176,7 @@ namespace BookCatalogue.DAOMock
 
         public IAuthor? GetAuthor(Guid id)
         {
-            return _authors.FirstOrDefault(a => a.ID == id);
+            return _authors.FirstOrDefault(a => a.Id == id);
         }
 
         public async Task<IAuthor?> GetAuthorAsync(Guid id)
@@ -186,7 +186,7 @@ namespace BookCatalogue.DAOMock
 
         public IBook? GetBook(Guid id)
         {
-            return _books.FirstOrDefault(b => b.ID == id);
+            return _books.FirstOrDefault(b => b.Id == id);
         }
 
         public async Task<IBook?> GetBookAsync(Guid id)
@@ -197,7 +197,7 @@ namespace BookCatalogue.DAOMock
 
         public void UpdateAuthor(IAuthor author)
         {
-            var existingAuthor = _authors.FirstOrDefault(a => a.ID == author.ID);
+            var existingAuthor = _authors.FirstOrDefault(a => a.Id == author.Id);
             if (existingAuthor != null)
             {
                 existingAuthor.Name = author.Name;
@@ -212,7 +212,7 @@ namespace BookCatalogue.DAOMock
 
         public void UpdateBook(IBook book)
         {
-            var existingBook = _books.FirstOrDefault(b => b.ID == book.ID);
+            var existingBook = _books.FirstOrDefault(b => b.Id == book.Id);
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;
@@ -225,12 +225,12 @@ namespace BookCatalogue.DAOMock
 
         public bool AuthorExists(Guid id)
         {
-            return _authors.Any(a => a.ID == id);
+            return _authors.Any(a => a.Id == id);
         }
 
         public bool BookExists(Guid id)
         {
-            return _books.Any(b => b.ID == id);
+            return _books.Any(b => b.Id == id);
         }
     }
 }
