@@ -10,8 +10,8 @@ namespace BookCatalogue.Core
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<BookCatalogueUIWebContext>(options =>
-                options.UseSqlite(builder.Configuration.GetConnectionString("BookCatalogueUIWebContext") ?? throw new InvalidOperationException("Connection string 'BookCatalogueUIWebContext' not found.")));
+            //builder.Services.AddDbContext<BookCatalogueUIWebContext>(options =>
+            //    options.UseSqlite(builder.Configuration.GetConnectionString("BookCatalogueUIWebContext") ?? throw new InvalidOperationException("Connection string 'BookCatalogueUIWebContext' not found.")));
             var configuration = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllersWithViews();
