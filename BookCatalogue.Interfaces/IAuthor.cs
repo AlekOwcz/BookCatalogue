@@ -8,7 +8,7 @@ namespace BookCatalogue.Interfaces
 {
     public interface IAuthor
     {
-        Guid ID { get; set; }
+        Guid Id { get; set; }
         string Name { get; set; }
         string Surname { get; set; }
         DateTime DateOfBirth { get; set; }

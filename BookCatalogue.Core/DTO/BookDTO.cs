@@ -4,7 +4,7 @@ namespace BookCatalogue.Core.DTO
 {
     public class BookDTO
     {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         [Display(Name = "Release Year")]
         public int ReleaseYear { get; set; }

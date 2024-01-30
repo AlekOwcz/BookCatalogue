@@ -5,7 +5,7 @@ namespace BookCatalogue.DAOMock.BO
 {
     public class Book : IBook
     {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public int ReleaseYear { get; set; }
         public IAuthor Author { get; set; }

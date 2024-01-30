@@ -48,7 +48,7 @@ namespace BookCatalogue.Core.Controllers
             var authors = await _context.GetAllAuthorsAsync();
             var authorViewModels = authors.Select(a => new AuthorDTO
             {
-                ID = a!.ID,
+                Id = a!.Id,
                 Name = a.Name,
                 Surname = a.Surname,
                 DateOfBirth = a.DateOfBirth
@@ -145,7 +145,7 @@ namespace BookCatalogue.Core.Controllers
         {
             if (ModelState.IsValid)
             {
-                author.ID = Guid.NewGuid();
+                author.Id = Guid.NewGuid();
                 IAuthor authorToAdd = _context.ConvertToIAuthor(author);
                 _context.AddAuthor(authorToAdd);
                 await _context.SaveChangesAsync();
@@ -179,7 +179,7 @@ namespace BookCatalogue.Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
         {
-            if (id != author.ID)
+            if (id != author.Id)
             {
                 return NotFound();
             }
@@ -194,7 +194,7 @@ namespace BookCatalogue.Core.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.ID))
+                    if (!AuthorExists(author.Id))
                     {
                         return NotFound();
                     }
@@ -251,7 +251,7 @@ namespace BookCatalogue.Core.Controllers
         {
             AuthorDTO authorDTO = new()
             {
-                ID = author.ID,
+                Id = author.Id,
                 Name = author.Name,
                 Surname = author.Surname,
                 DateOfBirth = author.DateOfBirth
