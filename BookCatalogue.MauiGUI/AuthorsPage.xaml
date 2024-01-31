@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:BookCatalogue.MauiGUI.ViewModels"
+             xmlns:core="clr-namespace:BookCatalogue.Core;assembly=BookCatalogue.Core"
+             xmlns:blc="clr-namespace:BookCatalogue.BLC;assembly=BookCatalogue.BLC"
+             x:Class="BookCatalogue.MauiGUI.AuthorsPage"
+             Title="Authors Page">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <viewmodel:LanguageEnumToIntConverter x:Key="LanguageConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <!-- Tytuły kolumn -->
+            <StackLayout Orientation="Horizontal" Padding="10">
+                <Label Text="Name" FontAttributes="Bold" WidthRequest="150"/>
+                <Label Text="Surname" FontAttributes="Bold" WidthRequest="150"/>
+                <Label Text="Date of Birth" FontAttributes="Bold" WidthRequest="150"/>
+            </StackLayout>
+
+            <!-- Lista autorów -->
+            <ListView ItemsSource="{Binding Authors}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding Name}" WidthRequest="150" />
+                                <Label Text="{Binding Surname}" WidthRequest="150"/>
+                                <Label Text="{Binding DateOfBirth, StringFormat='{0:d}'}" WidthRequest="150"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Edycja autora -->
+            <Grid RowDefinitions="Auto,Auto,Auto"
+                  ColumnDefinitions="100,Auto"
+                  Padding="10"
+                  RowSpacing="10"
+                  BindingContext="{Binding AuthorEdit}">
+
+                <Label Grid.Column="0" Grid.Row="0" Text="Name"/>
+                <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Name}"/>
+
+                <Label Grid.Column="0" Grid.Row="1" Text="Surname"/>
+                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Surname}"/>
+
+                <Label Grid.Column="0" Grid.Row="2" Text="Date of Birth"/>
+                <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding DateOfBirth}" Format="d"/>
+            </Grid>
+
+            <!-- Przyciski akcji -->
+            <StackLayout Orientation="Horizontal" Spacing="10" Padding="10">
+                <Button Text="New Author" Command="{Binding CreateNewAuthorCommand}"/>
+                <Button Text="Save Author" Command="{Binding SaveAuthorCommand}"/>
+                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

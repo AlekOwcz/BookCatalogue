@@ -11,23 +11,31 @@ using System.Threading.Tasks;
 
 namespace BookCatalogue.MauiGUI.ViewModels
 {
-    public partial class BookViewModel:ObservableObject, IBook
+    public partial class BookViewModel:ObservableValidator, IBook
     {
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Id must be given")]
         private Guid id;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [MinLength(1, ErrorMessage = "Title must be not empty")]
         private string? title;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required(ErrorMessage = "Release year must be positive and not in the future")]
+        [Range(0, 2024)]
         private int releaseYear;
 
         [ObservableProperty]
+       // [MinLength(2, ErrorMessage = "Author must have at leat 2 characters")]
         private IAuthor? author;
 
         [ObservableProperty]
         [DefaultValue(0)]
-        private Language language = Language.Polish;
+        private Language language;
 
         [ObservableProperty]
         private Genre genre;
@@ -48,6 +56,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
 
         public IReadOnlyList<string> AllLanguages { get; } = Enum.GetNames(typeof(Language));
+        public IReadOnlyList<string> AllGenres { get; } = Enum.GetNames(typeof(Genre));
     }
 }
 

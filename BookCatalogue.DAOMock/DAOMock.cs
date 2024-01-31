@@ -158,6 +158,7 @@ namespace BookCatalogue.DAOMock
             return _authors.AsEnumerable();
         }
 
+
         public Task<IEnumerable<IAuthor>> GetAllAuthorsAsync()
         {
             return Task.FromResult(GetAllAuthors());

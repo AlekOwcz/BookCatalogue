@@ -52,7 +52,9 @@ namespace BookCatalogue.MauiGUI
             builder.Services.AddSingleton<BooksPage>();
             builder.Services.AddSingleton<BooksCollectionViewModel>();
             builder.Services.AddSingleton<BookViewModel>();
-
+            builder.Services.AddSingleton<AuthorsPage>();
+            builder.Services.AddSingleton<AuthorViewModel>();
+            builder.Services.AddSingleton<AuthorsCollectionViewModel>();
 
 
 #if DEBUG

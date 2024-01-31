@@ -15,6 +15,10 @@
             Title="Books Catalogue"
             ContentTemplate="{DataTemplate local:BooksPage}"
             Route="MainPage" />
+        <ShellContent
+     Title="Authors"
+     ContentTemplate="{DataTemplate local:AuthorsPage}"
+     Route="MainPage" />
 
     </FlyoutItem>
 </Shell>

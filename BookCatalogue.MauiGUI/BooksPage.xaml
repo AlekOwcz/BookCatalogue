@@ -4,58 +4,77 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:BookCatalogue.MauiGUI.ViewModels"
              xmlns:core="clr-namespace:BookCatalogue.Core;assembly=BookCatalogue.Core"
+             xmlns:blc="clr-namespace:BookCatalogue.BLC;assembly=BookCatalogue.BLC"
              x:Class="BookCatalogue.MauiGUI.BooksPage"
-             Title="BooksPage">
+             Title="Books Page">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <viewmodel:LanguageEnumToIntConverter x:Key="LanguageConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    
-    
-    <VerticalStackLayout>
-        <ListView ItemsSource="{Binding Books}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <HorizontalStackLayout Padding="10" x:DataType="viewmodel:BookViewModel">
-                            <Label Text="{Binding Title}"  WidthRequest="200" />
-                            <Label Text="{Binding Author.FullName}"  WidthRequest="200"/>
-                            <Label Text="{Binding ReleaseYear}"  WidthRequest="200"/>
-                            <Label Text="{Binding Language}"  WidthRequest="200"/>
-                            <Label Text="{Binding Genre}" WidthRequest="200"/>
-                        </HorizontalStackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <!-- Tytuły kolumn -->
+            <StackLayout Orientation="Horizontal" Padding="10">
+                <Label Text="Title" FontAttributes="Bold" WidthRequest="200"/>
+                <Label Text="Author" FontAttributes="Bold" WidthRequest="200"/>
+                <Label Text="Release Year" FontAttributes="Bold" WidthRequest="200"/>
+                <Label Text="Language" FontAttributes="Bold" WidthRequest="200"/>
+                <Label Text="Genre" FontAttributes="Bold" WidthRequest="200"/>
+            </StackLayout>
+
+            <!-- Lista książek -->
+            <ListView ItemsSource="{Binding Books}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding Title}" WidthRequest="200" />
+                                <Label Text="{Binding Author.FullName}" WidthRequest="200"/>
+                                <Label Text="{Binding ReleaseYear}" WidthRequest="200"/>
+                                <Label Text="{Binding Language}" WidthRequest="200"/>
+                                <Label Text="{Binding Genre}" WidthRequest="200"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
 
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-              ColumnDefinitions="Auto,Auto"
-              BindingContext="{Binding BookEdit}">
+            <!-- Edycja książki -->
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                  ColumnDefinitions="100,Auto"
+                  Padding="10"
+                  RowSpacing="10"
+                  BindingContext="{Binding BookEdit}">
 
-            <Label Grid.Column="0" Grid.Row="0" Text="Title"/>
-            <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Title}"/>
-            
-            <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
-            <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Author.FullName}"/>
+                <Label Grid.Column="0" Grid.Row="0" Text="Title"/>
+                <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Title}"/>
 
-            <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
-            <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
-            
-            <Label Grid.Column="0" Grid.Row="3" Text="Genre"/>
-            <Picker Grid.Column="1" Grid.Row="3" SelectedItem="{Binding core:Genre}"/>
-            
-            <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
-            <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding AllLanguages}"
+                <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
+                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Author.FullName}"/>
+
+                <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
+                <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
+
+                <Label Grid.Column="0" Grid.Row="3" Text="Genre"/>
+                <Picker Grid.Column="1" Grid.Row="3" ItemsSource="{Binding AllGenres}"
+                    SelectedIndex="{Binding Genre, Converter={StaticResource LanguageConverter}, ConverterParameter={x:Type core:Genre}, Mode=TwoWay}" 
+TextColor="Black"/>
+
+                <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
+                <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding AllLanguages}"
             SelectedIndex="{Binding Language, Converter={StaticResource LanguageConverter}, ConverterParameter={x:Type core:Language}, Mode=TwoWay}" 
             TextColor="Black"/>
-        </Grid>
-        <HorizontalStackLayout>
-            <Button Text="New Book" Command="{Binding CreateNewBookCommand}"/>
-            <Button Text="Save Book" Command="{Binding SaveBookCommand}"/>
-            <Button Text="Cancel" Command="{Binding CancelCommand}"/>
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+            </Grid>
+
+            <!-- Przyciski akcji -->
+            <StackLayout Orientation="Horizontal" Spacing="10" Padding="10">
+                <Button Text="New Book" Command="{Binding CreateNewBookCommand}"/>
+                <Button Text="Save Book" Command="{Binding SaveBookCommand}"/>
+                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

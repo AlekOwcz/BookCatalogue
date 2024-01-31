@@ -37,7 +37,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             CancelCommand = new Command(
                             execute: () =>
                             {
-                                BookEdit.PropertyChanged -= OnBookEditPropertyChanged;
+                                BookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
                                 BookEdit = null;
                                 IsEditing = false;
                                 RefreshCanExecute();
@@ -46,6 +46,10 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
                             );
    
+        }
+        public IReadOnlyList<string> GetAllAuthors()
+        {
+            return (IReadOnlyList<string>)_blc.GetAllAuthors();
         }
 
         [ObservableProperty]
@@ -58,12 +62,12 @@ namespace BookCatalogue.MauiGUI.ViewModels
         private void CreateNewBook()
         {
             BookEdit = new BookViewModel();
-            BookEdit.PropertyChanged += OnBookEditPropertyChanged;
+            BookEdit.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = true;
             RefreshCanExecute();
         }
 
-        private void OnBookEditPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void OnPersonEditPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             SaveBookCommand.NotifyCanExecuteChanged();
         }
@@ -84,7 +88,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
         private void SaveBook()
         {
             Books.Add(BookEdit);
-            BookEdit.PropertyChanged -= OnBookEditPropertyChanged;
+            BookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
             BookEdit = null;
             RefreshCanExecute();
@@ -92,7 +96,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
         private bool CanEditBookBeSaved()
         {   //TODO: dodaj weryfikację
-            return BookEdit != null && BookEdit.Author != null ;
+            return this.BookEdit!=null && this.BookEdit.Title != null;
                 
         }
         //On cancel      BookEdit.PropertyChanged -= OnBookEditPropertyChanged;
@@ -120,4 +124,5 @@ namespace BookCatalogue.MauiGUI.ViewModels
         }
     }
 
+   
 }

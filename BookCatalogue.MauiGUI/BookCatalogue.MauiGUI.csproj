@@ -62,6 +62,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="AuthorsPage.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiImage Remove="Resources\Images\splash.svg" />
 	</ItemGroup>
 
@@ -119,6 +123,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="AuthorsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="BooksPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
