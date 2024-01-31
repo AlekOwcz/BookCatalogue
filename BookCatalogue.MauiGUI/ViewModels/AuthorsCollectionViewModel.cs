@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BookCatalogue.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,22 @@ namespace BookCatalogue.MauiGUI.ViewModels
     {
         [ObservableProperty]
         public ObservableCollection<AuthorViewModel> authors;
+
+        private AuthorViewModel _selectedAuthor;
+        public AuthorViewModel SelectedAuthor
+        {
+            get => _selectedAuthor;
+            set => SetProperty(ref _selectedAuthor, value);
+        }
+        public IReadOnlyList<string> AllAuthors()
+        {
+            List<string> strings = new List<string>();
+            foreach (AuthorViewModel author in Authors)
+            {
+                strings.Add(author.fullName);
+            }
+            return strings;
+        }
         private readonly BLC.BLC _blc;
         public AuthorsCollectionViewModel(BLC.BLC blc)
         {
@@ -24,6 +41,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             {
                 authors.Add(new AuthorViewModel(book));
             }
+            _selectedAuthor=authors.First();
         }
         [ObservableProperty]
         private AuthorViewModel authorEdit;
