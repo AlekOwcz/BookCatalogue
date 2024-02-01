@@ -123,10 +123,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="AuthorsPage.xaml">
+	  <MauiXaml Update="Pages\AuthorsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="BooksPage.xaml">
+	  <MauiXaml Update="Pages\BooksPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
