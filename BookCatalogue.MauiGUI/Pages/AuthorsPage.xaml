@@ -46,13 +46,13 @@
                   IsVisible="{Binding Editing}">
 
                 <Label Grid.Column="0" Grid.Row="0" Text="Name"/>
-                <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Name}"/>
+                <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Name}" IsEnabled="False" x:Name="NameEntry"/>
 
                 <Label Grid.Column="0" Grid.Row="1" Text="Surname"/>
-                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Surname}"/>
+                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Surname}" IsEnabled="False" x:Name="SurnameEntry"/>
 
                 <Label Grid.Column="0" Grid.Row="2" Text="Date of Birth"/>
-                <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding DateOfBirth}" Format="d"/>
+                <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding DateOfBirth}" Format="d" IsEnabled="False" x:Name="DOBEntry"/>
             </Grid>
 
             <!-- Przyciski akcji -->

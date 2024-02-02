@@ -11,14 +11,13 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-        <ShellContent
-            Title="Books Catalogue"
-            ContentTemplate="{DataTemplate local:BooksPage}"
-            Route="MainPage" />
-        <ShellContent
-     Title="Authors"
-     ContentTemplate="{DataTemplate local:AuthorsPage}"
-     Route="MainPage" />
-
+    <ShellContent
+        Title="Books Catalogue"
+        ContentTemplate="{DataTemplate local:BooksPage}"
+        Route="BooksPage" />
+    <ShellContent
+        Title="Authors"
+        ContentTemplate="{DataTemplate local:AuthorsPage}"
+        Route="AuthorsPage" />
     </FlyoutItem>
 </Shell>

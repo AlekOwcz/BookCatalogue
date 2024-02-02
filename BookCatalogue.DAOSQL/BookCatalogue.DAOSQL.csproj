@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)dbconfig.migration.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;" />
+    <Exec Command="copy /y &quot;$(ProjectDir)Configs\Console\dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)Configs\Web\dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)Configs\MAUI\dbconfig.json&quot; &quot;$(SolutionDir)BookCatalogue.MauiGUI\bin\$(Configuration)\net8.0-windows10.0.19041.0\win10-x64\AppX&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue\bin\$(Configuration)\net8.0\&quot;&#xD;&#xA;copy /y &quot;$(ProjectDir)dbconfig.migration.json&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.UIWeb\&quot;&#xD;&#xA;copy /y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)BookCatalogue.MauiGUI\&quot;" />
   </Target>
 
 </Project>

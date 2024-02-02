@@ -20,7 +20,11 @@ namespace BookCatalogue.DAOSQL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_configuration.GetConnectionString("Sqlite"));
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string connectionString = _configuration.GetConnectionString("Sqlite");
+            string absoluteConnectionString = Path.Combine(baseDirectory, connectionString);
+            optionsBuilder.UseSqlite("Data Source="+Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _configuration.GetConnectionString("Sqlite")));
+            //optionsBuilder.UseSqlite(_configuration.GetConnectionString("Sqlite"));
         }
 
         public virtual DbSet<Author> Authors { get; set; }

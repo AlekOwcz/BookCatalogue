@@ -60,20 +60,34 @@
 
                 <Label Grid.Column="0" Grid.Row="3" Text="Genre"/>
                 <Picker Grid.Column="1" Grid.Row="3" ItemsSource="{Binding AllGenres}"
-                    SelectedIndex="{Binding Genre, Converter={StaticResource LanguageConverter}, ConverterParameter={x:Type core:Genre}, Mode=TwoWay}" 
-TextColor="Black"/>
+                    SelectedIndex="{
+                        Binding Genre, 
+                        Converter={StaticResource LanguageConverter}, 
+                        ConverterParameter={x:Type core:Genre}, 
+                        Mode=TwoWay
+                    }" 
+                    TextColor="Black"
+                    x:Name="GenrePicker"
+                    IsEnabled="False"/>
 
                 <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
                 <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding AllLanguages}"
-            SelectedIndex="{Binding Language, Converter={StaticResource LanguageConverter}, ConverterParameter={x:Type core:Language}, Mode=TwoWay}" 
-            TextColor="Black"/>
+                    SelectedIndex="{
+                        Binding Language, 
+                        Converter={StaticResource LanguageConverter}, 
+                        ConverterParameter={x:Type core:Language}, 
+                        Mode=TwoWay
+                    }" 
+                    TextColor="Black"
+                    x:Name="LanguagePicker"
+                    IsEnabled="False"/>
             </Grid>
 
             <!-- Przyciski akcji -->
             <StackLayout Orientation="Horizontal" Spacing="10" Padding="10">
-                <Button Text="New Book" Command="{Binding CreateNewBookCommand}"/>
-                <Button Text="Save Book" Command="{Binding SaveBookCommand}"/>
-                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+                <Button Text="New Book" Command="{Binding CreateNewBookCommand}" Clicked="EnableFields"/>
+                <Button Text="Save Book" Command="{Binding SaveBookCommand}" Clicked="DisableFields"/>
+                <Button Text="Cancel" Command="{Binding CancelCommand}" Clicked="DisableFields"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
