@@ -21,23 +21,19 @@ public partial class BooksPage : ContentPage
 
         foreach (var author in authors)
         {
-            AuthorEntry.Items.Add(author.Name);
+            AuthorEntry.Items.Add(author.FullName);
         }
     }
 
     private void EnableFields(object sender, EventArgs e)
     {
-        TitleEntry.IsEnabled = true;
-        AuthorEntry.IsEnabled = true;
-        ReleaseEntry.IsEnabled = true;
+        
         GenrePicker.IsEnabled = true;
         LanguagePicker.IsEnabled = true;
     }
     private void DisableFields(object sender, EventArgs e)
     {
-        TitleEntry.IsEnabled = false;
-        AuthorEntry.IsEnabled = false;
-        ReleaseEntry.IsEnabled = false;
+        
         GenrePicker.IsEnabled = false;
         LanguagePicker.IsEnabled = false;
     }

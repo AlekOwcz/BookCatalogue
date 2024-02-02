@@ -21,7 +21,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [MinLength(1, ErrorMessage = "Title must be not empty")]
-        private string? title;
+        private string title;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -31,7 +31,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
         [ObservableProperty]
        // [MinLength(2, ErrorMessage = "Author must have at leat 2 characters")]
-        private IAuthor? author;
+        private IAuthor author;
 
         [ObservableProperty]
         [DefaultValue(0)]

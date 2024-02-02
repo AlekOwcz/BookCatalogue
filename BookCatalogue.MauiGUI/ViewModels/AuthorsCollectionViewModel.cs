@@ -75,13 +75,18 @@ namespace BookCatalogue.MauiGUI.ViewModels
             if (IsCreating)
             {
                 AuthorsCollection.Add(SelectedAuthor);
-                _blc.AddAuthor((IAuthor)SelectedAuthor);
+
+                IAuthor authorToUpdate = SelectedAuthor;
+                _blc.AddAuthor(authorToUpdate);
+
+
             }
             if (IsEditing)
             {
-                _blc.UpdateAuthor(SelectedAuthor);
+                IAuthor authorToUpdate = SelectedAuthor;
+                _blc.UpdateAuthor(authorToUpdate);
             }
-            
+            _blc.SaveChangesAsync();
             SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
             isCreating = false;

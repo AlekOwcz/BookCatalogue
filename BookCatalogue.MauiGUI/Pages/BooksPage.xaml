@@ -54,7 +54,7 @@
 
                 <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
                 <Picker Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AllAuthors}"
-        SelectedItem="{Binding Author}" />
+        SelectedItem="{Binding Author}" x:Name="AuthorEntry" />
                 <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
                 <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
 
@@ -68,7 +68,7 @@
                     }" 
                     TextColor="Black"
                     x:Name="GenrePicker"
-                    IsEnabled="False"/>
+                    IsEnabled="True"/>
 
                 <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
                 <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding AllLanguages}"
@@ -80,7 +80,7 @@
                     }" 
                     TextColor="Black"
                     x:Name="LanguagePicker"
-                    IsEnabled="False"/>
+                    IsEnabled="True"/>
             </Grid>
 
             <!-- Przyciski akcji -->
