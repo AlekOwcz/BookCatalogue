@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "Sqlite": "..\\..\\..\\..\\..\\..\\BookCatalogue.DAOSQL\\library.db"
+  }
+}
