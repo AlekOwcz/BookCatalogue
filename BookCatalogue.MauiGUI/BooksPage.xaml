@@ -54,7 +54,7 @@
 
                 <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
                 <Picker Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AllAuthors}"
-        SelectedItem="{Binding SelectedAuthor}" />
+        SelectedItem="{Binding Author}" />
                 <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
                 <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
 

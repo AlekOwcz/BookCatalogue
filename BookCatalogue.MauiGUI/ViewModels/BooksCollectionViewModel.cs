@@ -88,6 +88,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
         private void SaveBook()
         {
             Books.Add(BookEdit);
+            _blc.AddBook((IBook)BookEdit);
             BookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
             BookEdit = null;

@@ -1,21 +1,15 @@
-﻿using BookCatalogue.Core;
+﻿using BookCatalogue.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace BookCatalogue.MauiGUI.ViewModels
 {
     public partial class AuthorsCollectionViewModel : ObservableObject
     {
         [ObservableProperty]
-        public ObservableCollection<AuthorViewModel> authors;
+        public ObservableCollection<AuthorViewModel> authorsCollection;
 
         private AuthorViewModel _selectedAuthor;
         public AuthorViewModel SelectedAuthor
@@ -26,7 +20,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
         public IReadOnlyList<string> AllAuthors()
         {
             List<string> strings = new List<string>();
-            foreach (AuthorViewModel author in Authors)
+            foreach (AuthorViewModel author in AuthorsCollection)
             {
                 strings.Add(author.fullName);
             }
@@ -36,25 +30,26 @@ namespace BookCatalogue.MauiGUI.ViewModels
         public AuthorsCollectionViewModel(BLC.BLC blc)
         {
             _blc = blc;
-            authors = new ObservableCollection<AuthorViewModel>();
-            foreach (var book in _blc.GetAllAuthors())
+            AuthorsCollection = new ObservableCollection<AuthorViewModel>();
+            foreach (var author in _blc.GetAllAuthors())
             {
-                authors.Add(new AuthorViewModel(book));
+                AuthorsCollection.Add(new AuthorViewModel(author));
             }
-            _selectedAuthor=authors.First();
+            _selectedAuthor=AuthorsCollection.First();
         }
-        [ObservableProperty]
-        private AuthorViewModel authorEdit;
+        //[ObservableProperty]
+        //private AuthorViewModel authorEdit;
 
         [ObservableProperty]
-        private bool isEditing;
+        private bool isEditing, isCreating;
 
         [RelayCommand(CanExecute = nameof(CanCreateNewAuthor))]
         private void CreateNewAuthor()
         {
-            AuthorEdit = new AuthorViewModel();
-            AuthorEdit.PropertyChanged += OnPersonEditPropertyChanged;
-            IsEditing = true;
+            SelectedAuthor = new AuthorViewModel();
+            SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
+            IsEditing = false;
+            isCreating = true;
             RefreshCanExecute();
         }
 
@@ -63,7 +58,6 @@ namespace BookCatalogue.MauiGUI.ViewModels
             SaveAuthorCommand.NotifyCanExecuteChanged();
         }
 
-        private void DeleteBook() { }
         private bool CanCreateNewAuthor()
         {
             return !IsEditing;
@@ -78,28 +72,49 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [RelayCommand(CanExecute = nameof(CanEditAuthorBeSaved))]
         private void SaveAuthor()
         {
-            Authors.Add(AuthorEdit);
-            AuthorEdit.PropertyChanged -= OnPersonEditPropertyChanged;
+            if (IsCreating)
+            {
+                AuthorsCollection.Add(SelectedAuthor);
+                _blc.AddAuthor((IAuthor)SelectedAuthor);
+            }
+            if (IsEditing)
+            {
+                _blc.UpdateAuthor(SelectedAuthor);
+            }
+            
+            SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
-            AuthorEdit = null;
+            isCreating = false;
+            SelectedAuthor = null;
             RefreshCanExecute();
         }
         [RelayCommand(CanExecute = nameof(IsEditing))]
         private void Cancel()
         {
-            AuthorEdit.PropertyChanged -= OnPersonEditPropertyChanged;
+            SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
-            AuthorEdit = null;
+            isCreating = false;
+            SelectedAuthor = null;
             RefreshCanExecute();
         }
 
 
         private bool CanEditAuthorBeSaved()
         {   //TODO: dodaj weryfikację
-            return AuthorEdit != null && AuthorEdit.Name != null && AuthorEdit.Surname != null;
+            return SelectedAuthor != null && SelectedAuthor.Name != null && SelectedAuthor.Surname != null;
 
         }
-        
+
+        [RelayCommand]
+        public void Remove()
+        {
+            AuthorsCollection.Remove(SelectedAuthor);
+            if (SelectedAuthor != null)
+            {
+                this._blc.RemoveAuthor(_selectedAuthor);
+
+            }
+        }
 
     }
 }

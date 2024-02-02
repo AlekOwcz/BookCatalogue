@@ -23,11 +23,11 @@
             </StackLayout>
 
             <!-- Lista autorów -->
-            <ListView ItemsSource="{Binding Authors}">
+            <ListView ItemsSource="{Binding AuthorsCollection}" SelectedItem="{Binding SelectedAuthor}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
+                            <StackLayout Orientation="Horizontal" Padding="10" >
                                 <Label Text="{Binding Name}" WidthRequest="150" />
                                 <Label Text="{Binding Surname}" WidthRequest="150"/>
                                 <Label Text="{Binding DateOfBirth, StringFormat='{0:d}'}" WidthRequest="150"/>
@@ -42,7 +42,8 @@
                   ColumnDefinitions="100,Auto"
                   Padding="10"
                   RowSpacing="10"
-                  BindingContext="{Binding AuthorEdit}">
+                  BindingContext="{Binding SelectedAuthor}"
+                  IsVisible="{Binding Editing}">
 
                 <Label Grid.Column="0" Grid.Row="0" Text="Name"/>
                 <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Name}"/>
@@ -59,6 +60,7 @@
                 <Button Text="New Author" Command="{Binding CreateNewAuthorCommand}"/>
                 <Button Text="Save Author" Command="{Binding SaveAuthorCommand}"/>
                 <Button Text="Cancel" Command="{Binding CancelCommand}"/>
+                <Button Text="Remove" Command="{Binding RemoveCommand}"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
