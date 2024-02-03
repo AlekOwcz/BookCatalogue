@@ -23,6 +23,23 @@ namespace BookCatalogue.MauiGUI.ViewModels
         private ObservableCollection<BookViewModel> books;
 
         private readonly BLC.BLC _blc;
+
+        [ObservableProperty]
+        private BookViewModel _bookEdit;
+
+        [ObservableProperty]
+        private bool _isEditing;
+        private AuthorViewModel _chosenAuthor;
+        public AuthorViewModel ChosenAuthor
+        {
+            get { return _chosenAuthor; }
+            set
+            {
+                if (_chosenAuthor != value)
+                    _chosenAuthor = value;
+                OnPropertyChanged(nameof(ChosenAuthor));
+            }
+        }
         public BooksCollectionViewModel(BLC.BLC blc)
         {
             _blc = blc;
@@ -32,13 +49,13 @@ namespace BookCatalogue.MauiGUI.ViewModels
                 books.Add(new BookViewModel(book));
             }
             IsEditing= false;
-            bookEdit = null;
+            _bookEdit = null;
 
             CancelCommand = new Command(
                             execute: () =>
                             {
-                                BookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
-                                BookEdit = null;
+                                _bookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
+                                _bookEdit = null;
                                 IsEditing = false;
                                 RefreshCanExecute();
                             },
@@ -47,22 +64,14 @@ namespace BookCatalogue.MauiGUI.ViewModels
                             );
    
         }
-        public IReadOnlyList<string> GetAllAuthors()
-        {
-            return (IReadOnlyList<string>)_blc.GetAllAuthors();
-        }
+       
 
-        [ObservableProperty]
-        private BookViewModel bookEdit;
-
-        [ObservableProperty]
-        private bool isEditing;
 
         [RelayCommand(CanExecute = nameof(CanCreateNewBook))]
         private void CreateNewBook()
         {
-            BookEdit = new BookViewModel();
-            BookEdit.PropertyChanged += OnPersonEditPropertyChanged;
+            _bookEdit = new BookViewModel();
+            _bookEdit.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = true;
             RefreshCanExecute();
         }
@@ -87,18 +96,18 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [RelayCommand(CanExecute = nameof(CanEditBookBeSaved))]
         private void SaveBook()
         {
-            Books.Add(BookEdit);
-            _blc.AddBook((IBook)BookEdit);
+            Books.Add(_bookEdit);
+            _blc.AddBook((IBook)_bookEdit);
             _blc.SaveChangesAsync();
-            BookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
+            _bookEdit.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
-            BookEdit = null;
+            _bookEdit = null;
             RefreshCanExecute();
         }
 
         private bool CanEditBookBeSaved()
         {   //TODO: dodaj weryfikację
-            return this.BookEdit!=null && this.BookEdit.Title != null;
+            return this._bookEdit != null && this._bookEdit.Title != null;
                 
         }
         //On cancel      BookEdit.PropertyChanged -= OnBookEditPropertyChanged;

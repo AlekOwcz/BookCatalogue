@@ -12,18 +12,18 @@ public partial class BooksPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
         _context = context;
-        LoadAuthors();
+       // LoadAuthors();
 	}
 
-    private void LoadAuthors()
-    {
-        var authors = _context.GetAllAuthors();
+    //private void LoadAuthors()
+    //{
+    //    var authors = _context.GetAllAuthors();
 
-        foreach (var author in authors)
-        {
-            AuthorEntry.Items.Add(author.FullName);
-        }
-    }
+    //    foreach (var author in authors)
+    //    {
+    //        AuthorEntry.Items.Add(author.FullName);
+    //    }
+    //}
 
     private void EnableFields(object sender, EventArgs e)
     {

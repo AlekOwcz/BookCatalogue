@@ -26,7 +26,7 @@
             </StackLayout>
 
             <!-- Lista książek -->
-            <ListView ItemsSource="{Binding Books}">
+            <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding BookEdit}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -53,9 +53,13 @@
                 <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Title}"/>
 
                 <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
-                <Picker Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AllAuthors}"
-        SelectedItem="{Binding Author}" x:Name="AuthorEntry" />
-                <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
+                <Picker Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AuthorsCollection}"
+                     SelectedItem="{Binding ChosenAuthor}" >
+                    <Picker.ItemDisplayBinding>
+                        <Binding Path="NAme"/>
+                    </Picker.ItemDisplayBinding>
+                </Picker>
+                    <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
                 <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
 
                 <Label Grid.Column="0" Grid.Row="3" Text="Genre"/>
