@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookCatalogue.BLC;
-using BookCatalogue.Core.DTO;
 using BookCatalogue.Interfaces;
 using System.Globalization;
+using BookCatalogue.UIWeb.DTO;
 
-namespace BookCatalogue.Core.Controllers
+namespace BookCatalogue.UIWeb.Controllers
 {
     public class AuthorsController : Controller
     {
@@ -141,13 +141,12 @@ namespace BookCatalogue.Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname,DateOfBirth")] AuthorDTO author)
         {
             if (ModelState.IsValid)
             {
                 author.Id = Guid.NewGuid();
-                IAuthor authorToAdd = _context.ConvertToIAuthor(author);
-                _context.AddAuthor(authorToAdd);
+                _context.AddAuthor(author);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -177,7 +176,7 @@ namespace BookCatalogue.Core.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Name,Surname,DateOfBirth")] AuthorDTO author)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Surname,DateOfBirth")] AuthorDTO author)
         {
             if (id != author.Id)
             {
@@ -188,8 +187,7 @@ namespace BookCatalogue.Core.Controllers
             {
                 try
                 {
-                    IAuthor authorToUpdate = _context.ConvertToIAuthor(author);
-                    _context.UpdateAuthor(authorToUpdate);
+                    _context.UpdateAuthor(author);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

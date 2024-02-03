@@ -1,5 +1,4 @@
 ﻿using BookCatalogue.Core;
-using BookCatalogue.Core.DTO;
 using BookCatalogue.DAOSQL.BO;
 using BookCatalogue.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -32,91 +31,31 @@ namespace BookCatalogue.DAOSQL
 
         public void AddAuthor(IAuthor author)
         {
-            if (author is Author authorEntity)
+            Author newAuthor = new Author()
             {
-                _context.Authors.Add(authorEntity);
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new ArgumentException("The author must be of type BookCatalogue.DAOSQL.BO.Author.");
-            }
+                Id = Guid.NewGuid(),
+                Name = author.Name,
+                Surname = author.Surname,
+                DateOfBirth = author.DateOfBirth
+            };
+            _context.Authors.Add(newAuthor);
+            _context.SaveChanges();
         }
 
         public void AddBook(IBook book)
         {
-            if (book is Book bookEntity)
+            Book newBook = new Book()
             {
-                _context.Books.Add(bookEntity);
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new ArgumentException("The book must be of type BookCatalogue.DAOSQL.BO.Book.");
-            }
-        }
-
-
-        public IAuthor ConvertToIAuthor(AuthorDTO authorDTO)
-        {
-            IAuthor author = new Author()
-            {
-                Id = authorDTO.Id,
-                Name = authorDTO.Name,
-                Surname = authorDTO.Surname,
-                DateOfBirth = authorDTO.DateOfBirth
+                Id = Guid.NewGuid(),
+                Title = book.Title,
+                ReleaseYear = book.ReleaseYear,
+                Author = (Author)book.Author,
+                Language = book.Language,
+                Genre = book.Genre
             };
-
-            return author;
+            _context.Books.Add(newBook);
+            _context.SaveChanges();
         }
-
-        public IBook ConvertToIBook(BookDTO bookDTO)
-        {
-            IBook book = new Book()
-            {
-                Id = bookDTO.Id,
-                Title = bookDTO.Title,
-                ReleaseYear = bookDTO.ReleaseYear,
-                Language = bookDTO.Language,
-                Genre = bookDTO.Genre
-            };
-            IAuthor? author = GetAuthor(bookDTO.AuthorID) ?? throw new Exception("Author missing in the database");
-            book.Author = author;
-
-            return book;
-        }
-
-
-        public IAuthor CreateNewAuthor(string name, string surname, DateTime dateOfBirth)
-        {
-            Author author = new Author();
-            author.Name = name;
-            author.Surname = surname;
-            author.DateOfBirth = dateOfBirth;
-            return author;
-        }
-
-        public IBook CreateNewBook(string title, int releaseYear, IAuthor author, Language language, Genre genre)
-        {
-            Book book = new Book
-            {
-                Title = title,
-                ReleaseYear = releaseYear,
-                Language = language,
-                Genre = genre
-            };
-            if (author is Author bookEntity)
-            {
-                book.Author = bookEntity;
-            }
-            else
-            {
-                throw new InvalidCastException("Author must inherit from BookCatalogue.DAOSQL.BO.Author");
-            }
-            
-            return book;
-        }
-
 
         public void DeleteAuthor(IAuthor author)
         {
@@ -185,7 +124,6 @@ namespace BookCatalogue.DAOSQL
             return await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
         }
 
-
         public void UpdateAuthor(IAuthor author)
         {
             var existingAuthor = _context.Authors.FirstOrDefault(a => a.Id == author.Id);
@@ -207,21 +145,14 @@ namespace BookCatalogue.DAOSQL
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;
-                if (book is Book bookEntity)
+                var existingAuthor = _context.Authors.FirstOrDefault(a => a.Id == book.Author.Id);
+                if (existingAuthor != null)
                 {
-                    var existingAuthor = _context.Authors.FirstOrDefault(a => a.Id == bookEntity.Author.Id);
-                    if (existingAuthor != null)
-                    {
-                        existingBook.Author = existingAuthor;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Author not found in the database.");
-                    }
+                    existingBook.Author = existingAuthor;
                 }
                 else
                 {
-                    throw new InvalidCastException("Book must inherit from BookCatalogue.DAOSQL.BO.Book");
+                    throw new ArgumentException("Author not found in the database.");
                 }
                 existingBook.Language = book.Language;
                 existingBook.ReleaseYear = book.ReleaseYear;

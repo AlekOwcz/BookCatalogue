@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookCatalogue.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
-namespace BookCatalogue.Core.DTO
+namespace BookCatalogue.UIWeb.DTO
 {
-    public class AuthorDTO
+    public class AuthorDTO: IAuthor
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

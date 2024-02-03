@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookCatalogue.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using BookCatalogue.Core;
 
-namespace BookCatalogue.Core.DTO
+namespace BookCatalogue.UIWeb.DTO
 {
-    public class BookDTO
+    public class BookDTO: IBook
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -11,7 +13,7 @@ namespace BookCatalogue.Core.DTO
         [AuthorIsSet(ErrorMessage = "Author must be selected.")]
         [Display(Name = "Author")]
         public Guid AuthorID { get; set; }
-        public AuthorDTO Author { get; set; }
+        public IAuthor Author { get; set; }
         public Language Language { get; set; }
         public Genre Genre { get; set; }
     }
