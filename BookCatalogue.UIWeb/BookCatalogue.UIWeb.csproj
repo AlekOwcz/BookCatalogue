@@ -25,4 +25,8 @@
     <ProjectReference Include="..\BookCatalogue.Interfaces\BookCatalogue.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+
 </Project>

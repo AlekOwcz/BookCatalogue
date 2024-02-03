@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BookCatalogue.Core.DTO;
-using BookCatalogue.UIWeb.Data;
+using BookCatalogue.UIWeb.DTO;
 using BookCatalogue.Interfaces;
 
 namespace BookCatalogue.UIWeb.Controllers
@@ -163,14 +162,14 @@ namespace BookCatalogue.UIWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
+        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
         {
             ModelState.Remove("Author");
             if (ModelState.IsValid)
             {
                 book.Id = Guid.NewGuid();
-                IBook bookToAdd = _context.ConvertToIBook(book);
-                if (bookToAdd.ReleaseYear <= bookToAdd.Author.DateOfBirth.Year)
+                IAuthor? author = _context.GetAuthor(book.AuthorID);
+                if (author != null && book.ReleaseYear <= author.DateOfBirth.Year)
                 {
                     ModelState.AddModelError("ReleaseYear", "The release year can not be before author's birth.");
                 }
@@ -179,7 +178,8 @@ namespace BookCatalogue.UIWeb.Controllers
                     PopulateAuthorsDropDownList(null);
                     return View(book);
                 }
-                _context.AddBook(bookToAdd);
+                book.Author = author!;
+                _context.AddBook(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -211,7 +211,7 @@ namespace BookCatalogue.UIWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ID,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,ReleaseYear,AuthorID,Language,Genre")] BookDTO book)
         {
             if (id != book.Id)
             {
@@ -222,8 +222,8 @@ namespace BookCatalogue.UIWeb.Controllers
             {
                 try
                 {
-                    IBook bookToUpdate = _context.ConvertToIBook(book);
-                    if (bookToUpdate.ReleaseYear <= bookToUpdate.Author.DateOfBirth.Year) 
+                    IAuthor? author = _context.GetAuthor(book.AuthorID);
+                    if (author != null && book.ReleaseYear <= author.DateOfBirth.Year) 
                     {
                         ModelState.AddModelError("ReleaseYear", "The release year can not be before author's birth.");
                     }
@@ -232,7 +232,8 @@ namespace BookCatalogue.UIWeb.Controllers
                         PopulateAuthorsDropDownList(book.AuthorID);
                         return View(book);
                     }
-                    _context.UpdateBook(bookToUpdate);
+                    book.Author = author!;
+                    _context.UpdateBook(book);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -328,7 +329,7 @@ namespace BookCatalogue.UIWeb.Controllers
                 DateOfBirth = a.DateOfBirth
             }).OrderBy(a => a.Surname).ThenBy(a => a.Name).ToList();
             authorViewModels.Insert(0, new AuthorDTO { Id = Guid.Empty, Name = "Select an author", Surname = "", DateOfBirth = new DateTime() });
-            ViewData["Authors"] = new SelectList(authorViewModels, "ID", "FullName", selectedAuthor);
+            ViewData["Authors"] = new SelectList(authorViewModels, "Id", "FullName", selectedAuthor);
         }
     }
 }

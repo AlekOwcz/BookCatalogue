@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using BookCatalogue.Core.DTO;
 using BookCatalogue.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,26 +59,6 @@ namespace BookCatalogue.BLC
             }
             return _instance;
         }
-
-
-        public IAuthor ConvertToIAuthor(AuthorDTO authorDTO)
-        {
-            if (_dao == null)
-            {
-                throw new Exception($"No instance of DAO found");
-            }
-            return _dao.ConvertToIAuthor(authorDTO);
-        }
-        
-        public IBook ConvertToIBook(BookDTO bookDTO)
-        {
-            if (_dao == null)
-            {
-                throw new Exception($"No instance of DAO found");
-            }
-            return _dao.ConvertToIBook(bookDTO);
-        }
-
 
         public Task<int> SaveChangesAsync()
         {

@@ -1,17 +1,14 @@
 using BookCatalogue.BLC;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using BookCatalogue.UIWeb.Data;
 
-namespace BookCatalogue.Core
+namespace BookCatalogue.UIWeb
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            //builder.Services.AddDbContext<BookCatalogueUIWebContext>(options =>
-            //    options.UseSqlite(builder.Configuration.GetConnectionString("BookCatalogueUIWebContext") ?? throw new InvalidOperationException("Connection string 'BookCatalogueUIWebContext' not found.")));
             var configuration = builder.Configuration;
             // Add services to the container.
             builder.Services.AddControllersWithViews();

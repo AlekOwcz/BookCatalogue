@@ -1,5 +1,4 @@
 ﻿using BookCatalogue.Core;
-using BookCatalogue.Core.DTO;
 using BookCatalogue.DAOMock.BO;
 using BookCatalogue.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -63,83 +62,29 @@ namespace BookCatalogue.DAOMock
 
         public void AddAuthor(IAuthor author)
         {
-            if (author is Author)
+            Author newAuthor = new Author() 
             {
-                author.Id = Guid.NewGuid();
-                _authors.Add(author);
-            }
-            else
-            {
-                throw new ArgumentException("The author must be of type BookCatalogue.DAOMock.BO.Author.");
-            }
+                Id = Guid.NewGuid(),
+                Name = author.Name,
+                Surname = author.Surname,
+                DateOfBirth = author.DateOfBirth
+            };
+            _authors.Add(newAuthor);
         }
 
         public void AddBook(IBook book)
         {
-            if (book is Book)
+            Book newBook = new Book()
             {
-                book.Id = Guid.NewGuid();
-                _books.Add(book);
-            }
-            else
-            {
-                throw new ArgumentException("The book must be of type BookCatalogue.DAOMock.BO.Book.");
-            }
-        }
-
-
-        public IAuthor ConvertToIAuthor(AuthorDTO authorDTO)
-        {
-            IAuthor author = new Author()
-            {
-                Id = authorDTO.Id,
-                Name = authorDTO.Name,
-                Surname = authorDTO.Surname,
-                DateOfBirth = authorDTO.DateOfBirth
+                Id = Guid.NewGuid(),
+                Title = book.Title,
+                ReleaseYear = book.ReleaseYear,
+                Author = book.Author,
+                Language = book.Language,
+                Genre = book.Genre
             };
-
-            return author;
+            _books.Add(newBook);
         }
-
-        public IBook ConvertToIBook(BookDTO bookDTO)
-        {
-            IBook book = new Book()
-            {
-                Id = bookDTO.Id,
-                Title = bookDTO.Title,
-                ReleaseYear = bookDTO.ReleaseYear,
-                Language = bookDTO.Language,
-                Genre = bookDTO.Genre
-            };
-            IAuthor? author = GetAuthor(bookDTO.AuthorID) ?? throw new Exception("Author missing in the database");
-            book.Author = author;
-
-            return book;
-        }
-
-
-        public IAuthor CreateNewAuthor(string name, string surname, DateTime dateOfBirth)
-        {
-            Author author = new Author
-            {
-                Name = name,
-                Surname = surname,
-                DateOfBirth = dateOfBirth
-            };
-            return author;
-        }
-
-        public IBook CreateNewBook(string title, int releaseYear, IAuthor author, Language language, Genre genre)
-        {
-            BO.Book book = new BO.Book();
-            book.Title = title;
-            book.ReleaseYear = releaseYear;
-            book.Author = author;
-            book.Language = language;
-            book.Genre = genre;
-            return book;
-        }
-
 
         public void DeleteAuthor(IAuthor author)
         {

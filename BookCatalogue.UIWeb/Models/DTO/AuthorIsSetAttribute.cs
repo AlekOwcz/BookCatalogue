@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookCatalogue.Core.DTO
+namespace BookCatalogue.UIWeb.DTO
 {
     public class AuthorIsSetAttribute: ValidationAttribute
     {
