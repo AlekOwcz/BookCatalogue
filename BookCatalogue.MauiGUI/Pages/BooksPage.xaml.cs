@@ -37,4 +37,10 @@ public partial class BooksPage : ContentPage
         EnableFields(sender, e);
         _viewModel.StartEditing(e.SelectedItemIndex);
     }
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        string searchText = e.NewTextValue.ToLowerInvariant();
+        _viewModel.ApplySearchFiltering(searchText);
+    }
+
 }

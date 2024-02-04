@@ -25,6 +25,8 @@ namespace BookCatalogue.MauiGUI.ViewModels
     {
         [ObservableProperty]
         private ObservableCollection<BookViewModel> books;
+        [ObservableProperty]
+        private ObservableCollection<BookViewModel> filteredBooks;
         private BookViewModel? _selectedBook;
         public BookViewModel? SelectedBook
         {
@@ -39,9 +41,13 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
         [ObservableProperty]
         private bool _isEditing, _isCreating;
-        [ObservableProperty]
-        private IAuthor _chosenAuthor;
-        
+        private IAuthor? _chosenAuthor;
+        public IAuthor? ChosenAuthor
+        {
+            get => _chosenAuthor;
+            set => SetProperty(ref _chosenAuthor, value);
+        }
+
         public BooksCollectionViewModel(BLC.BLC blc)
         {
             _blc = blc;
@@ -50,6 +56,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             {
                 Books.Add(new BookViewModel(book));
             }
+            FilteredBooks = new ObservableCollection<BookViewModel>(Books);
             AuthorsCollection = new ObservableCollection<AuthorViewModel>();
             foreach (var author in blc.GetAllAuthors())
             {
@@ -111,18 +118,19 @@ namespace BookCatalogue.MauiGUI.ViewModels
                 bookToUpdate.Author = author;
                 if (IsEditing)
                 {
-                    Books.RemoveAt(EditedBookId);
-                    Books.Insert(EditedBookId, SelectedBook);
+                    FilteredBooks.RemoveAt(EditedBookId);
+                    FilteredBooks.Insert(EditedBookId, SelectedBook);
                     _blc.RemoveBook(bookToUpdate);
                     _blc.AddBook(bookToUpdate);
                 }
                 if(IsCreating)
                 {
-                    
-                    Books.Add(SelectedBook);
+
+                    FilteredBooks.Add(SelectedBook);
                     _blc.AddBook(bookToUpdate);
                 }
                 _blc.SaveChangesAsync();
+                RefreshBooks();
                 SelectedBook.PropertyChanged -= OnPersonEditPropertyChanged;
                 IsEditing = false;
                 IsCreating = false;
@@ -199,12 +207,12 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [RelayCommand(CanExecute = nameof(IsEditing))]
         public void RemoveBook()
         {
-            Books.RemoveAt(EditedBookId);
+            FilteredBooks.RemoveAt(EditedBookId);
             if (SelectedBook != null && _blc.BookExists(SelectedBook.Id))
             {
                 _blc.RemoveBook(SelectedBook);
-
             }
+            RefreshBooks();
             SelectedBook.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = false;
             IsCreating = false;
@@ -216,19 +224,44 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [RelayCommand]
         public void StartEditing(int SelectedId)
         {
-            if (!IsCreating)
+            if (!IsCreating && !IsEditing)
             {
                 foreach (var author in _blc.GetAllAuthors())
                 {
                     AuthorsCollection.Add(new AuthorViewModel(author));
                 }
                 EditedBookId = SelectedId;
-                SelectedBook = new BookViewModel(Books.ElementAt(SelectedId));
+                SelectedBook = new BookViewModel(FilteredBooks.ElementAt(SelectedId));
                 ChosenAuthor = SelectedBook.Author;
                 SelectedBook.PropertyChanged += OnPersonEditPropertyChanged;
                 IsEditing = true;
                 IsCreating = false;
                 RefreshCanExecute();
+            }
+        }
+        void RefreshBooks()
+        {
+            Books.Clear();
+            foreach (var book in _blc.GetAllBooks())
+            {
+                Books.Add(new BookViewModel(book));
+            }
+        }
+        public void ApplySearchFiltering(string text)
+        {
+            
+            FilteredBooks.Clear();
+            var searchText = text.Trim();
+            var filteredStorages = Books.Where(book =>
+                book.Title.ToLowerInvariant().Contains(searchText) ||
+                book.Author.FullName.ToLowerInvariant().Contains(searchText) ||
+                book.Genre.ToString().ToLowerInvariant().Contains(searchText) ||
+                book.Language.ToString().ToLowerInvariant().Contains(searchText) ||
+                book.ReleaseYear.ToString().ToLowerInvariant().Contains(searchText)
+            );
+            foreach (var item in filteredStorages)
+            {
+                FilteredBooks.Add(item);
             }
         }
     }
@@ -275,4 +308,6 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
     }
 
+
+   
 }

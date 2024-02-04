@@ -17,6 +17,7 @@
 
     <ContentPage.Content>
         <StackLayout>
+            <SearchBar Placeholder="Search for books" TextChanged="OnSearchTextChanged" />
             <!-- Tytuły kolumn -->
             <StackLayout Orientation="Horizontal" Padding="10">
                 <Label Text="Title" FontAttributes="Bold" WidthRequest="200"/>
@@ -27,7 +28,7 @@
             </StackLayout>
 
             <!-- Lista książek -->
-            <ListView ItemsSource="{Binding Books}"  ItemSelected="ListView_ItemSelected" SelectionMode="Single">
+            <ListView ItemsSource="{Binding FilteredBooks}"  ItemSelected="ListView_ItemSelected" SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

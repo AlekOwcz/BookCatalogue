@@ -10,7 +10,8 @@ namespace BookCatalogue.MauiGUI.ViewModels
     {
         [ObservableProperty]
         public ObservableCollection<AuthorViewModel> authorsCollection;
-
+        [ObservableProperty]
+        public ObservableCollection<AuthorViewModel> filteredAuthors;
         private AuthorViewModel? _selectedAuthor;
         public AuthorViewModel? SelectedAuthor
         {
@@ -26,6 +27,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             {
                 AuthorsCollection.Add(new AuthorViewModel(author));
             }
+            FilteredAuthors = new ObservableCollection<AuthorViewModel>(authorsCollection);
         }
 
         //[ObservableProperty]
@@ -69,7 +71,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             {
                 if (IsCreating)
                 {
-                    AuthorsCollection.Add(SelectedAuthor);
+                    FilteredAuthors.Add(SelectedAuthor);
 
                     IAuthor authorToUpdate = SelectedAuthor;
                     _blc.AddAuthor(authorToUpdate);
@@ -79,8 +81,8 @@ namespace BookCatalogue.MauiGUI.ViewModels
                 if (IsEditing)
                 {
                     IAuthor authorToUpdate = SelectedAuthor;
-                    AuthorsCollection.RemoveAt(EditedAuthorID);
-                    AuthorsCollection.Insert(EditedAuthorID, SelectedAuthor);
+                    FilteredAuthors.RemoveAt(EditedAuthorID);
+                    FilteredAuthors.Insert(EditedAuthorID, SelectedAuthor);
                     _blc.UpdateAuthor(authorToUpdate);
                 }
                 _blc.SaveChangesAsync();
@@ -89,6 +91,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
                 IsCreating = false;
                 SelectedAuthor = null;
                 RefreshCanExecute();
+                RefreshAuthors();
             }
 
         }
@@ -147,12 +150,13 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [RelayCommand(CanExecute =nameof(IsEditing))]
         public void RemoveAuthor()
         {
-            AuthorsCollection.RemoveAt(EditedAuthorID);
+            FilteredAuthors.RemoveAt(EditedAuthorID);
             if (SelectedAuthor != null && _blc.AuthorExists(SelectedAuthor.id))
             {
                 _blc.RemoveAuthor(SelectedAuthor);
 
             }
+            RefreshAuthors();
             SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = false;
             IsCreating = false;
@@ -166,7 +170,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             if (!IsCreating)
             {
                 EditedAuthorID = SelectedId;
-                SelectedAuthor = new AuthorViewModel(AuthorsCollection.ElementAt(SelectedId));
+                SelectedAuthor = new AuthorViewModel(FilteredAuthors.ElementAt(SelectedId));
                 SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
                 IsEditing = true;
                 IsCreating = false;
@@ -184,6 +188,29 @@ namespace BookCatalogue.MauiGUI.ViewModels
             public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             {
                 throw new NotImplementedException();
+            }
+        }
+        void RefreshAuthors()
+        {
+            AuthorsCollection.Clear();
+            foreach (var author in _blc.GetAllAuthors())
+            {
+                AuthorsCollection.Add(new AuthorViewModel(author));
+            }
+        }
+        public void ApplySearchFiltering(string text)
+        {
+
+            FilteredAuthors.Clear();
+            var searchText = text.Trim();
+            var filteredStorages = AuthorsCollection.Where(author =>
+                author.Name.ToLowerInvariant().Contains(searchText) ||
+                author.Surname.ToLowerInvariant().Contains(searchText) ||
+                author.DateOfBirth.ToString().ToLowerInvariant().Contains(searchText)
+                );
+            foreach (var item in filteredStorages)
+            {
+                FilteredAuthors.Add(item);
             }
         }
 
