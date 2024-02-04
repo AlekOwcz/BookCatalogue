@@ -202,15 +202,15 @@ namespace BookCatalogue.MauiGUI.ViewModels
         {
 
             FilteredAuthors.Clear();
-            var searchText = text.Trim();
-            var filteredStorages = AuthorsCollection.Where(author =>
-                author.Name.ToLowerInvariant().Contains(searchText) ||
-                author.Surname.ToLowerInvariant().Contains(searchText) ||
-                author.DateOfBirth.ToString().ToLowerInvariant().Contains(searchText)
+            text = text.Trim();
+            var filteredAuthors = AuthorsCollection.Where(author =>
+                author.Name.ToLowerInvariant().Contains(text) ||
+                author.Surname.ToLowerInvariant().Contains(text) ||
+                author.DateOfBirth.ToString().ToLowerInvariant().Contains(text)
                 );
-            foreach (var item in filteredStorages)
+            foreach (var author in filteredAuthors)
             {
-                FilteredAuthors.Add(item);
+                FilteredAuthors.Add(author);
             }
         }
 

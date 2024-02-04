@@ -4,6 +4,7 @@
              x:Class="BookCatalogue.MauiGUI.MainPage">
 
     <ScrollView>
+        <StackLayout>
         <VerticalStackLayout
             VerticalOptions="CenterAndExpand" 
             HorizontalOptions="CenterAndExpand" 
@@ -11,8 +12,16 @@
             Spacing="25">
             <Label Text="Welcome to Book Catalogue" FontSize="Large" HorizontalOptions="Center" Margin="0,0,0,20"/>
             <Button Text="Browse Books" Clicked="OnBrowseBooksClicked"/>
-            <Button Text="Add New Book" Clicked="OnAddNewBookClicked" Margin="0,20,0,0"/>
+            <Button Text="Browse Authors" Clicked="OnAddNewBookClicked" Margin="0,20,0,0"/>
+           
         </VerticalStackLayout>
+        <VerticalStackLayout
+            VerticalOptions="End"
+            Margin="20">
+            <Label Text="Developed by:" FontSize="Small" HorizontalOptions="Start" VerticalOptions="End"/>
+            <Label Text="Paweł Marczewski 148099" FontSize="Small" HorizontalOptions="Start" VerticalOptions="End"/>
+            <Label Text="Aleksander Owczarek 148172" FontSize="Small" HorizontalOptions="Start" VerticalOptions="End"/>
+        </VerticalStackLayout>
+        </StackLayout>
     </ScrollView>
-
 </ContentPage>

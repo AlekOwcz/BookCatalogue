@@ -47,7 +47,7 @@
             <!-- Edycja książki -->
             
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-                  ColumnDefinitions="100,Auto"
+                  ColumnDefinitions="110,Auto"
                   Padding="10"
                   RowSpacing="10"
                   x:Name="BookEditor"
@@ -78,7 +78,7 @@
                     IsEnabled="True"/>
 
                 <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
-                <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4"  BindingContext="{Binding SelectedBook}" ItemsSource="{Binding AllLanguages}"
+                <Picker Grid.Column="1" Grid.Row="4"  BindingContext="{Binding SelectedBook}" ItemsSource="{Binding AllLanguages}"
                     SelectedIndex="{
                         Binding Language, 
                         Converter={StaticResource LanguageConverter}, 

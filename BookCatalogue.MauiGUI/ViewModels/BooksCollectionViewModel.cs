@@ -41,12 +41,9 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
         [ObservableProperty]
         private bool _isEditing, _isCreating;
-        private IAuthor? _chosenAuthor;
-        public IAuthor? ChosenAuthor
-        {
-            get => _chosenAuthor;
-            set => SetProperty(ref _chosenAuthor, value);
-        }
+        [ObservableProperty]
+        private AuthorViewModel chosenAuthor;
+       
 
         public BooksCollectionViewModel(BLC.BLC blc)
         {
@@ -66,19 +63,19 @@ namespace BookCatalogue.MauiGUI.ViewModels
             IsCreating=false;
             SelectedBook = null;
 
-   
         }
 
 
         [RelayCommand(CanExecute = nameof(CanCreateNewBook))]
         private void CreateNewBook()
         {
+            AuthorsCollection.Clear();
             foreach (var author in _blc.GetAllAuthors())
             {
                 AuthorsCollection.Add(new AuthorViewModel(author));
             }
             SelectedBook = new BookViewModel();
-            SelectedBook.Author = AuthorsCollection.First();
+            //SelectedBook.Author = AuthorsCollection.First();
             SelectedBook.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = false;
             IsCreating = true;
@@ -226,13 +223,14 @@ namespace BookCatalogue.MauiGUI.ViewModels
         {
             if (!IsCreating && !IsEditing)
             {
+                AuthorsCollection.Clear();
                 foreach (var author in _blc.GetAllAuthors())
                 {
                     AuthorsCollection.Add(new AuthorViewModel(author));
                 }
                 EditedBookId = SelectedId;
                 SelectedBook = new BookViewModel(FilteredBooks.ElementAt(SelectedId));
-                ChosenAuthor = SelectedBook.Author;
+                ChosenAuthor = new AuthorViewModel(SelectedBook.Author);
                 SelectedBook.PropertyChanged += OnPersonEditPropertyChanged;
                 IsEditing = true;
                 IsCreating = false;
@@ -251,18 +249,23 @@ namespace BookCatalogue.MauiGUI.ViewModels
         {
             
             FilteredBooks.Clear();
-            var searchText = text.Trim();
-            var filteredStorages = Books.Where(book =>
-                book.Title.ToLowerInvariant().Contains(searchText) ||
-                book.Author.FullName.ToLowerInvariant().Contains(searchText) ||
-                book.Genre.ToString().ToLowerInvariant().Contains(searchText) ||
-                book.Language.ToString().ToLowerInvariant().Contains(searchText) ||
-                book.ReleaseYear.ToString().ToLowerInvariant().Contains(searchText)
+            text = text.Trim();
+            var filteredBooks = Books.Where(book =>
+                book.Title.ToLowerInvariant().Contains(text) ||
+                book.Author.FullName.ToLowerInvariant().Contains(text) ||
+                book.Genre.ToString().ToLowerInvariant().Contains(text) ||
+                book.Language.ToString().ToLowerInvariant().Contains(text) ||
+                book.ReleaseYear.ToString().ToLowerInvariant().Contains(text)
             );
-            foreach (var item in filteredStorages)
+            foreach (var book in filteredBooks)
             {
-                FilteredBooks.Add(item);
+                FilteredBooks.Add(book);
             }
+        }
+        public void OnPageAppearing()
+        {
+            RefreshBooks();
+            FilteredBooks = new ObservableCollection<BookViewModel>(Books);
         }
     }
 
@@ -308,6 +311,6 @@ namespace BookCatalogue.MauiGUI.ViewModels
 
     }
 
+    
 
-   
 }

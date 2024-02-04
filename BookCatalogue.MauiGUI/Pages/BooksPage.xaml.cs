@@ -18,6 +18,13 @@ public partial class BooksPage : ContentPage
 		BindingContext = viewModel;
         _context = context;
         _viewModel = viewModel;
+        Appearing += BookPage_Appearing;
+    }
+
+    private void BookPage_Appearing(object sender, EventArgs e)
+    {
+        // Call the method in the ViewModel
+        _viewModel.OnPageAppearing();
     }
 
 
