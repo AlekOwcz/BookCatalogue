@@ -128,6 +128,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
                 }
                 _blc.SaveChangesAsync();
                 RefreshBooks();
+                FilteredBooks = new ObservableCollection<BookViewModel>(Books);
                 SelectedBook.PropertyChanged -= OnPersonEditPropertyChanged;
                 IsEditing = false;
                 IsCreating = false;
@@ -208,8 +209,10 @@ namespace BookCatalogue.MauiGUI.ViewModels
             if (SelectedBook != null && _blc.BookExists(SelectedBook.Id))
             {
                 _blc.RemoveBook(SelectedBook);
+                _blc.SaveChangesAsync();
             }
             RefreshBooks();
+            FilteredBooks = new ObservableCollection<BookViewModel>(Books);
             SelectedBook.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = false;
             IsCreating = false;

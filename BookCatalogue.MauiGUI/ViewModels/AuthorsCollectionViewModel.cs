@@ -154,7 +154,7 @@ namespace BookCatalogue.MauiGUI.ViewModels
             if (SelectedAuthor != null && _blc.AuthorExists(SelectedAuthor.id))
             {
                 _blc.RemoveAuthor(SelectedAuthor);
-
+                _blc.SaveChangesAsync();
             }
             RefreshAuthors();
             SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
