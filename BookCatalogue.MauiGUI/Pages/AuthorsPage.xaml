@@ -57,7 +57,8 @@
                 <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Surname}" IsEnabled="True" x:Name="SurnameEntry"/>
 
                 <Label Grid.Column="0" Grid.Row="2" Text="Date of Birth"/>
-                <DatePicker Grid.Column="1" Grid.Row="2" Date="{Binding DateOfBirth}" Format="d" IsEnabled="True" x:Name="DOBEntry"/>
+                <DatePicker Grid.Column="1" Grid.Row="2" MinimumDate="01/01/1000"
+                            Date="{Binding DateOfBirth}" Format="d" IsEnabled="True" x:Name="DOBEntry"/>
             </Grid>
 
             <!-- Przyciski akcji -->
