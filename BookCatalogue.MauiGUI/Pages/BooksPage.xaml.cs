@@ -1,5 +1,8 @@
+using BookCatalogue.Interfaces;
 using BookCatalogue.MauiGUI.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Collections.ObjectModel;
 
 namespace BookCatalogue.MauiGUI;
 
@@ -7,34 +10,31 @@ public partial class BooksPage : ContentPage
 {
     private readonly BLC.BLC _context;
 
+    private BooksCollectionViewModel _viewModel;
+
     public BooksPage(BooksCollectionViewModel viewModel, BLC.BLC context)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
         _context = context;
-       // LoadAuthors();
-	}
+        _viewModel = viewModel;
+    }
 
-    //private void LoadAuthors()
-    //{
-    //    var authors = _context.GetAllAuthors();
-
-    //    foreach (var author in authors)
-    //    {
-    //        AuthorEntry.Items.Add(author.FullName);
-    //    }
-    //}
 
     private void EnableFields(object sender, EventArgs e)
     {
-        
-        GenrePicker.IsEnabled = true;
-        LanguagePicker.IsEnabled = true;
+        BookEditor.IsVisible = true;
     }
     private void DisableFields(object sender, EventArgs e)
     {
-        
-        GenrePicker.IsEnabled = false;
-        LanguagePicker.IsEnabled = false;
+        if (!_viewModel.IsCreating && !_viewModel.IsEditing)
+        {
+            BookEditor.IsVisible = false;
+        }
+    }
+    private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        EnableFields(sender, e);
+        _viewModel.StartEditing(e.SelectedItemIndex);
     }
 }

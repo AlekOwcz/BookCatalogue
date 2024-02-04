@@ -11,20 +11,11 @@ namespace BookCatalogue.MauiGUI.ViewModels
         [ObservableProperty]
         public ObservableCollection<AuthorViewModel> authorsCollection;
 
-        private AuthorViewModel _selectedAuthor;
-        public AuthorViewModel SelectedAuthor
+        private AuthorViewModel? _selectedAuthor;
+        public AuthorViewModel? SelectedAuthor
         {
             get => _selectedAuthor;
             set => SetProperty(ref _selectedAuthor, value);
-        }
-        public IReadOnlyList<string> AllAuthors()
-        {
-            List<string> strings = new List<string>();
-            foreach (AuthorViewModel author in AuthorsCollection)
-            {
-                strings.Add(author.fullName);
-            }
-            return strings;
         }
         private readonly BLC.BLC _blc;
         public AuthorsCollectionViewModel(BLC.BLC blc)
@@ -35,8 +26,8 @@ namespace BookCatalogue.MauiGUI.ViewModels
             {
                 AuthorsCollection.Add(new AuthorViewModel(author));
             }
-            _selectedAuthor=AuthorsCollection.First();
         }
+
         //[ObservableProperty]
         //private AuthorViewModel authorEdit;
 
@@ -49,18 +40,19 @@ namespace BookCatalogue.MauiGUI.ViewModels
             SelectedAuthor = new AuthorViewModel();
             SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
             IsEditing = false;
-            isCreating = true;
+            IsCreating = true;
             RefreshCanExecute();
         }
 
         private void OnPersonEditPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             SaveAuthorCommand.NotifyCanExecuteChanged();
+            RemoveAuthorCommand.NotifyCanExecuteChanged();
         }
 
         private bool CanCreateNewAuthor()
         {
-            return !IsEditing;
+            return !IsEditing && !IsCreating;
         }
 
         private void RefreshCanExecute()
@@ -68,56 +60,130 @@ namespace BookCatalogue.MauiGUI.ViewModels
             CreateNewAuthorCommand.NotifyCanExecuteChanged();
             SaveAuthorCommand.NotifyCanExecuteChanged();
             CancelCommand.NotifyCanExecuteChanged();
+            RemoveAuthorCommand.NotifyCanExecuteChanged();
         }
         [RelayCommand(CanExecute = nameof(CanEditAuthorBeSaved))]
         private void SaveAuthor()
         {
-            if (IsCreating)
+            if (Validate())
             {
-                AuthorsCollection.Add(SelectedAuthor);
+                if (IsCreating)
+                {
+                    AuthorsCollection.Add(SelectedAuthor);
 
-                IAuthor authorToUpdate = SelectedAuthor;
-                _blc.AddAuthor(authorToUpdate);
+                    IAuthor authorToUpdate = SelectedAuthor;
+                    _blc.AddAuthor(authorToUpdate);
 
 
+                }
+                if (IsEditing)
+                {
+                    IAuthor authorToUpdate = SelectedAuthor;
+                    AuthorsCollection.RemoveAt(EditedAuthorID);
+                    AuthorsCollection.Insert(EditedAuthorID, SelectedAuthor);
+                    _blc.UpdateAuthor(authorToUpdate);
+                }
+                _blc.SaveChangesAsync();
+                SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
+                IsEditing = false;
+                IsCreating = false;
+                SelectedAuthor = null;
+                RefreshCanExecute();
             }
-            if (IsEditing)
-            {
-                IAuthor authorToUpdate = SelectedAuthor;
-                _blc.UpdateAuthor(authorToUpdate);
-            }
-            _blc.SaveChangesAsync();
-            SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
-            IsEditing = false;
-            isCreating = false;
-            SelectedAuthor = null;
-            RefreshCanExecute();
+
         }
-        [RelayCommand(CanExecute = nameof(IsEditing))]
+        private bool Validate()
+        {
+            if (SelectedAuthor != null)
+            {
+                if (SelectedAuthor.Name == null || SelectedAuthor.Name.Length <= 0)
+                {
+                    _ = Application.Current?.MainPage?.DisplayAlert("Author Error", "Name should not be empty", "Ok");
+                    return false;
+                }
+                    
+                if (SelectedAuthor.Surname == null || SelectedAuthor.Surname.Length <= 0)
+                {
+                    _ = Application.Current?.MainPage?.DisplayAlert("Author Error", "Surname should not be empty", "Ok");
+                    return false;
+                }
+                if (SelectedAuthor.DateOfBirth > DateTime.Now)
+                {
+                    _ = Application.Current?.MainPage?.DisplayAlert("Author Error", "Author should not be from the future", "Ok");
+                    return false;
+                }
+                return true;
+
+            }
+            else
+            {
+                _ = Application.Current?.MainPage?.DisplayAlert("Author Error", "Selected Author is empty", "Ok");
+                return false;
+            }
+            return true;
+        }
+        bool CanCancel()
+        {
+            return IsCreating || IsEditing;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanCancel))]
         private void Cancel()
         {
             SelectedAuthor.PropertyChanged -= OnPersonEditPropertyChanged;
             IsEditing = false;
-            isCreating = false;
+            IsCreating = false;
             SelectedAuthor = null;
             RefreshCanExecute();
         }
-
+        [ObservableProperty]
+        private bool _isValidName,_isValidSurname,_isValidDate;
 
         private bool CanEditAuthorBeSaved()
-        {   //TODO: dodaj weryfikację
-            return SelectedAuthor != null && SelectedAuthor.Name != null && SelectedAuthor.Surname != null;
+        {   
+            
+            return IsCreating || IsEditing;
+        }
+        [RelayCommand(CanExecute =nameof(IsEditing))]
+        public void RemoveAuthor()
+        {
+            AuthorsCollection.RemoveAt(EditedAuthorID);
+            if (SelectedAuthor != null && _blc.AuthorExists(SelectedAuthor.id))
+            {
+                _blc.RemoveAuthor(SelectedAuthor);
 
+            }
+            SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
+            IsEditing = false;
+            IsCreating = false;
+            SelectedAuthor = null;
+            RefreshCanExecute();
+        }
+        private int EditedAuthorID;
+        [RelayCommand]
+        public void StartEditing(int SelectedId)
+        {
+            if (!IsCreating)
+            {
+                EditedAuthorID = SelectedId;
+                SelectedAuthor = new AuthorViewModel(AuthorsCollection.ElementAt(SelectedId));
+                SelectedAuthor.PropertyChanged += OnPersonEditPropertyChanged;
+                IsEditing = true;
+                IsCreating = false;
+                RefreshCanExecute();
+            }
         }
 
-        [RelayCommand]
-        public void Remove()
+        public class NullConverter : IValueConverter
         {
-            AuthorsCollection.Remove(SelectedAuthor);
-            if (SelectedAuthor != null)
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
             {
-                this._blc.RemoveAuthor(_selectedAuthor);
+                return value != null;
+            }
 
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotImplementedException();
             }
         }
 

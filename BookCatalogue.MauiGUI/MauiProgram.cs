@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Reflection;
-using BookCatalogue.UIWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Maui.Controls;
 using Microsoft.Extensions.DependencyInjection;

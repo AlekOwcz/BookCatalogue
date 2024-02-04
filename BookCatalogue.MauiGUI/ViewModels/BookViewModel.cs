@@ -45,7 +45,8 @@ namespace BookCatalogue.MauiGUI.ViewModels
             Id= book.Id;
             Title= book.Title;
             ReleaseYear= book.ReleaseYear;
-            Author= book.Author;
+            IAuthor author = book.Author;
+            Author=author;
             Language= book.Language;
             Genre= book.Genre;
         }

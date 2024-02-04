@@ -11,6 +11,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <viewmodel:LanguageEnumToIntConverter x:Key="LanguageConverter"/>
+            <viewmodel:GenreEnumToIntConverter x:Key="GenreConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -26,7 +27,7 @@
             </StackLayout>
 
             <!-- Lista książek -->
-            <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding BookEdit}">
+            <ListView ItemsSource="{Binding Books}"  ItemSelected="ListView_ItemSelected" SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -43,44 +44,44 @@
             </ListView>
 
             <!-- Edycja książki -->
+            
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                   ColumnDefinitions="100,Auto"
                   Padding="10"
                   RowSpacing="10"
-                  BindingContext="{Binding BookEdit}">
+                  x:Name="BookEditor"
+                  IsVisible="False">
 
                 <Label Grid.Column="0" Grid.Row="0" Text="Title"/>
-                <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Title}"/>
+                <Entry Grid.Column="1" Grid.Row="0"   BindingContext="{Binding SelectedBook}" Text="{Binding Title}"/>
 
                 <Label Grid.Column="0" Grid.Row="1" Text="Author"/>
-                <Picker Grid.Column="1" Grid.Row="1" ItemsSource="{Binding AuthorsCollection}"
-                     SelectedItem="{Binding ChosenAuthor}" >
-                    <Picker.ItemDisplayBinding>
-                        <Binding Path="NAme"/>
-                    </Picker.ItemDisplayBinding>
-                </Picker>
-                    <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
-                <Entry Grid.Column="1" Grid.Row="2" Text="{Binding ReleaseYear}"/>
+                <Picker Grid.Column="1" Grid.Row="1"
+                        ItemsSource="{ Binding AuthorsCollection}"
+                        ItemDisplayBinding="{Binding FullName}"
+                        SelectedItem="{Binding ChosenAuthor}" 
+                        x:Name="AuthorPicker"
+                        />
+                <Label Grid.Column="0" Grid.Row="2" Text="Release Year"/>
+                <Entry Grid.Column="1" Grid.Row="2"  BindingContext="{Binding SelectedBook}" Text="{Binding ReleaseYear}"/>
 
                 <Label Grid.Column="0" Grid.Row="3" Text="Genre"/>
-                <Picker Grid.Column="1" Grid.Row="3" ItemsSource="{Binding AllGenres}"
+                <Picker Grid.Column="1" Grid.Row="3"  BindingContext="{Binding SelectedBook}" ItemsSource="{Binding AllGenres}"
                     SelectedIndex="{
                         Binding Genre, 
-                        Converter={StaticResource LanguageConverter}, 
-                        ConverterParameter={x:Type core:Genre}, 
-                        Mode=TwoWay
+                        Converter={StaticResource GenreConverter}, 
+                        ConverterParameter={x:Type core:Genre}
                     }" 
                     TextColor="Black"
                     x:Name="GenrePicker"
                     IsEnabled="True"/>
 
                 <Label Grid.Column="0" Grid.Row="4" Text="Language"/>
-                <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding AllLanguages}"
+                <Picker WidthRequest="100" Grid.Column="1" Grid.Row="4"  BindingContext="{Binding SelectedBook}" ItemsSource="{Binding AllLanguages}"
                     SelectedIndex="{
                         Binding Language, 
                         Converter={StaticResource LanguageConverter}, 
-                        ConverterParameter={x:Type core:Language}, 
-                        Mode=TwoWay
+                        ConverterParameter={x:Type core:Language}
                     }" 
                     TextColor="Black"
                     x:Name="LanguagePicker"
@@ -92,6 +93,7 @@
                 <Button Text="New Book" Command="{Binding CreateNewBookCommand}" Clicked="EnableFields"/>
                 <Button Text="Save Book" Command="{Binding SaveBookCommand}" Clicked="DisableFields"/>
                 <Button Text="Cancel" Command="{Binding CancelCommand}" Clicked="DisableFields"/>
+                <Button Text="Remove" Command="{Binding RemoveBookCommand}" Clicked="DisableFields"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

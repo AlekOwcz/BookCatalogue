@@ -10,6 +10,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <viewmodel:LanguageEnumToIntConverter x:Key="LanguageConverter"/>
+            
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -23,7 +24,7 @@
             </StackLayout>
 
             <!-- Lista autorów -->
-            <ListView ItemsSource="{Binding AuthorsCollection}" SelectedItem="{Binding SelectedAuthor}">
+            <ListView ItemsSource="{Binding AuthorsCollection}" ItemSelected="ListView_ItemSelected" SelectionMode="Single" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -43,11 +44,14 @@
                   Padding="10"
                   RowSpacing="10"
                   BindingContext="{Binding SelectedAuthor}"
-                  IsVisible="{Binding Editing}">
+                  x:Name="AuthorEditor"
+                  IsVisible="False"
+                      >
+                
 
                 <Label Grid.Column="0" Grid.Row="0" Text="Name"/>
                 <Entry Grid.Column="1" Grid.Row="0" Text="{Binding Name}" IsEnabled="True" x:Name="NameEntry"/>
-
+            
                 <Label Grid.Column="0" Grid.Row="1" Text="Surname"/>
                 <Entry Grid.Column="1" Grid.Row="1" Text="{Binding Surname}" IsEnabled="True" x:Name="SurnameEntry"/>
 
@@ -57,10 +61,10 @@
 
             <!-- Przyciski akcji -->
             <StackLayout Orientation="Horizontal" Spacing="10" Padding="10">
-                <Button Text="New Author" Command="{Binding CreateNewAuthorCommand}"/>
-                <Button Text="Save Author" Command="{Binding SaveAuthorCommand}"/>
-                <Button Text="Cancel" Command="{Binding CancelCommand}"/>
-                <Button Text="Remove" Command="{Binding RemoveCommand}"/>
+                <Button Text="New Author" Command="{Binding CreateNewAuthorCommand}" Clicked="EnableFields"/>
+                <Button Text="Save Author" Command="{Binding SaveAuthorCommand}"  Clicked="DisableFields"/>
+                <Button Text="Cancel" Command="{Binding CancelCommand}"  Clicked="DisableFields"/>
+                <Button Text="Remove" Command="{Binding RemoveAuthorCommand}"  Clicked="DisableFields"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
